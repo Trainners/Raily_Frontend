@@ -1,0 +1,13 @@
+.primary {
+    background-color: var(--accent-base);
+    color: var(--accent-onAccent);
+}
+
+.primary:hover {
+    color: var(--accent-hover);
+}
+
+.ghost {
+    background: none;
+    border: 2px solid var(--accent-base);
+}
