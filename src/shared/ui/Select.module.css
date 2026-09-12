@@ -1,0 +1,54 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.trigger {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.trigger:hover {
+  border-color: var(--accent-border);
+}
+
+.trigger:focus {
+  outline: none;
+  border-color: var(--accent-border);
+}
+
+.value {
+  color: var(--text-primary);
+}
+
+.placeholder {
+  color: var(--text-muted);
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--text-secondary);
+}
