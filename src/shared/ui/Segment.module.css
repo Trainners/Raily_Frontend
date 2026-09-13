@@ -1,0 +1,32 @@
+.segment {
+  display: flex;
+  width: 100%;
+  padding: 4px;
+  gap: 4px;
+  border-radius: 8px;
+  background: var(--bg-muted);
+}
+
+.option {
+  flex: 1;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.option:hover {
+  color: var(--text-primary);
+}
+
+.selected {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}

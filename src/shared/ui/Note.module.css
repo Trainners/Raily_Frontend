@@ -1,0 +1,20 @@
+.note {
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.default {
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+}
+
+.warn {
+  background: var(--warn-bg);
+  color: var(--warn-text);
+}
+
+.error {
+  background: var(--error-bg);
+  color: var(--error-text);
+}
