@@ -2,7 +2,7 @@
   padding: 16px;
   border: 1px solid var(--border-default);
   border-radius: 10px;
-  background: var(--bg-surface);
+  background: var(--bg-muted);
 }
 
 .label {
