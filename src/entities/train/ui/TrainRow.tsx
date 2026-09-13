@@ -1,4 +1,6 @@
+import { formatDuration } from '../../../shared/lib/formatTime';
 import type { Train } from '../model/types';
+import styles from './TrainRow.module.css'
 
 export type TrainRowProps = {
   train: Train;
@@ -9,12 +11,26 @@ export default function TrainRow({
   train,
   onClick,
 }: TrainRowProps) {
+  const duration = formatDuration(
+    train.departureTime,
+    train.arrivalTime
+  )
+
   return (
-    <button type="button" onClick={onClick}>
-      <span>{train.trainNo}</span>
-      <span>{train.departureTime}</span>
-      <span aria-hidden="true">→</span>
-      <span>{train.arrivalTime}</span>
+    <button type="button" className={styles.row} onClick={onClick}>
+      <div className={styles.info}>
+        <strong className={styles.name}>
+          {train.trainName} {train.trainNo}
+        </strong>
+
+        <span className={styles.time}>
+          {train.departureTime} → {train.arrivalTime} · {duration}
+        </span>
+      </div>
+
+      <span className={styles.arrow} aria-hidden="true">
+        ›
+      </span>
     </button>
   );
 }
