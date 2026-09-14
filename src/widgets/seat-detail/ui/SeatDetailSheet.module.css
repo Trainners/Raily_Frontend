@@ -1,0 +1,82 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close:focus-visible {
+  outline: 2px solid var(--accent-base);
+  outline-offset: 2px;
+}
+
+.segments {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.segment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border-default);
+}
+
+.segment:last-child {
+  border-bottom: 0;
+}
+
+.route {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.state {
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.free {
+  color: var(--seat-free-text);
+}
+
+.sold {
+  color: var(--seat-sold-text);
+}
+
+.mine {
+  color: var(--seat-mine-text);
+}
