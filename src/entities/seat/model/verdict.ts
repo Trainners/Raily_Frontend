@@ -1,5 +1,7 @@
 import type { Seat } from './types';
 
+// Verdict는 좌석 하나를 전체 stops 구간을 기준으로
+// 어디부터 어디까지 앉을 수 있는지 판정한 결과
 export type Verdict =
     | { kind: 'full' }                              // 표시된 구간 전체가 비어있음
     | { kind: 'until'; station: string }            // 어디까지만 앉을 수 있음
