@@ -1,4 +1,4 @@
-export default function SignupPage() {
+export default function SignUpPage() {
     return(
         <>
             <h1>서비스 계정 만들기</h1>
