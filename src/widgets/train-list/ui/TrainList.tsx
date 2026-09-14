@@ -2,8 +2,8 @@ import { TrainRow, type Train } from '../../../entities/train';
 import styles from './TrainList.module.css';
 
 export type TrainListProps = {
-    trains: Train[];
-    onSelectTrain?: (train: Train) => void;
+    trains: Train[];    // 렌더링 할 열차 목록 데이터
+    onSelectTrain?: (train: Train) => void;     // 사용자가 목록에서 열차 하나 선택했을 때 부모 페이지에 알려주는 콜백
 };
 
 export default function TrainList({

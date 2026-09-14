@@ -40,6 +40,7 @@ export default function TrainSelectPage() {
 
     return (
         <main>
+            {/* 이후 별도의 검색 조건 요약 바 컴포넌트로 분리 예정 */}
             <p>07:00 이후 출발 · {trains.length}편</p>
 
             <TrainList
