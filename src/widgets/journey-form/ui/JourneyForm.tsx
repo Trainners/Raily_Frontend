@@ -3,11 +3,11 @@ import { Button, Card, Select } from '../../../shared/ui';
 import styles from './JourneyForm.module.css';
 
 export type JourneyFormProps = {
-  recentSegment?: {
+  recentSegment?: {   // 최근 조회했던 출발-도착 구간, 있으면 '이 구간으로 채우기' 카드 표시
     from: string;
     to: string;
   }
-  onSubmit: (values: {
+  onSubmit: (values: {  // '열차 조회' 버튼 클릭 시 폼에 입력된 값 전체를 JourneySetupPage로 전달
     from: string;
     to: string;
     date: string;
