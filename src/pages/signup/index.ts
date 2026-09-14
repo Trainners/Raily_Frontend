@@ -1,1 +1,1 @@
-export { default as SignUp } from "../signup/ui/SignupPage"
+export { default as SignUpPage } from "./ui/SignUpPage.tsx"
