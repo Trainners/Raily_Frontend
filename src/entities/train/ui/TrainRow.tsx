@@ -7,6 +7,8 @@ export type TrainRowProps = {
   onClick?: () => void;
 };
 
+// 열차 선택 페이지에서 각 열차의 출발/도착 정보를 Props로 전달
+// format Duration은 shared/lib/formatTime으로 정의
 export default function TrainRow({
   train,
   onClick,
