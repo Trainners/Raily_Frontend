@@ -1,11 +1,12 @@
 import {Route, Routes} from "react-router-dom"
-import LoginPage from "../pages/login/ui/LoginPage.tsx";
+
+import {ROUTES} from "../shared/config/routes.ts";
+import {ScreenShell} from "../widgets/screen-shell";
+import {LoginPage} from "../pages/login";
 import SignupPage from "../pages/signup/ui/SignupPage.tsx";
-import {ScreenShell} from "../widgets/screen-shell/ui/ScreenShell.tsx";
 import {JourneySetupPage} from "../pages/journey-setup";
 import {TrainSelectPage} from "../pages/train-select";
-import SeatMatrixPage from "../pages/seat-matrix/ui/SeatMatrixPage.tsx";
-import {ROUTES} from "../shared/config/routes.ts";
+import {SeatMatrixPage} from "../pages/seat-matrix";
 
 export default function App() {
     return (
