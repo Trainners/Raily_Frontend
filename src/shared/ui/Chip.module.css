@@ -1,0 +1,25 @@
+.chip {
+  padding: 8px 14px;
+  border: 1px solid var(--border-default);
+  border-radius: 999px;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.chip:hover {
+  border-color: var(--accent-border);
+  color: var(--accent-text);
+}
+
+.selected {
+  border-color: var(--accent-base);
+  background: var(--accent-subtle);
+  color: var(--accent-text);
+}

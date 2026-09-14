@@ -1,0 +1,47 @@
+:root {
+  /* accent — 파란색 계열 스케일 */
+  --accent-50:          #F0F5FC;
+  --accent-100:         #DCE8F8;
+  --accent-200:         #BBD1F0;
+  --accent-300:         #8FB3E4;
+  --accent-400:         #5E8FD4;
+  --accent-500:         #3B72C0;
+  --accent-600:         #2A5AA3;
+  --accent-700:         #1F4683;
+  --accent-800:         #1A3A6B;
+  --accent-900:         #142B4F;
+
+  /* accent — 시맨틱. UI 에서는 이 이름을 쓴다 */
+  --accent-base:        var(--accent-600);
+  --accent-hover:       var(--accent-700);
+  --accent-pressed:     var(--accent-800);
+  --accent-subtle:      var(--accent-100);
+  --accent-border:      var(--accent-200);
+  --accent-text:        var(--accent-700);
+  --accent-onAccent:    #FFFFFF;
+
+  /* surface · text · border */
+  --bg-page:            #F7F8FA;
+  --bg-surface:         #FFFFFF;
+  --bg-muted:           #EEF1F4;
+  --text-primary:       #2A313B;
+  --text-secondary:     #6B7686;
+  --text-muted:         #9AA4B1;
+  --text-onAccent:      #FFFFFF;
+  --border-default:     #DCE2E8;
+  --border-strong:      #C7CFD8;
+
+  /* seat — 좌석 상태 */
+  --seat-free-bg:       #D8E8DE;
+  --seat-free-text:     #2F6B4C;
+  --seat-sold-bg:       #E6E9ED;
+  --seat-sold-text:     #98A2AF;
+  --seat-mine-bg:       #FBE9CC;
+  --seat-mine-text:     #8A5A16;
+
+  /* status */
+  --warn-bg:            #F7EDDF;
+  --warn-text:          #A9601A;
+  --error-bg:           #F7E6E6;
+  --error-text:         #B03434;
+}

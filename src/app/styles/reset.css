@@ -1,0 +1,31 @@
+/* 모든 요소의 마진, 패딩, 박스 Sizing 초기화 */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 리스트 기호 제거 */
+ul, ol {
+  list-style: none;
+}
+
+/* 링크 밑줄 및 색상 초기화 */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 이미지 및 미디어 요소 반응형 처리 */
+img, video {
+  max-width: 100%;
+  display: block;
+}
+
+/* 부모 요소 폰트 상속받도록 설정 */
+input, textarea, select, button {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+}

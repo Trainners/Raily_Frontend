@@ -1,0 +1,20 @@
+.card {
+  padding: 16px;
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  background: var(--bg-surface);
+}
+
+.label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
