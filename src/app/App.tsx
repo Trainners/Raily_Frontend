@@ -3,10 +3,10 @@ import {Route, Routes} from "react-router-dom"
 import {ROUTES} from "../shared/config/routes.ts";
 import {ScreenShell} from "../widgets/screen-shell";
 import {LoginPage} from "../pages/login";
-import SignUpPage from "../pages/signup/ui/SignUpPage.tsx";
 import {JourneySetupPage} from "../pages/journey-setup";
 import {TrainSelectPage} from "../pages/train-select";
 import {SeatMatrixPage} from "../pages/seat-matrix";
+import {SignUpPage} from "../pages/signup";
 
 export default function App() {
     return (

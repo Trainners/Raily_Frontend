@@ -1,1 +1,1 @@
-export { ScreenShell } from "../screen-shell/ui/ScreenShell"
+export { ScreenShell } from "./ui/ScreenShell"

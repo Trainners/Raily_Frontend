@@ -1,1 +1,1 @@
-export { default as SeatMatrixPage } from "../seat-matrix/ui/SeatMatrixPage"
+export { default as SeatMatrixPage } from "./ui/SeatMatrixPage"
