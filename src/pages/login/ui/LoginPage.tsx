@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function LoginPage() {
     return (
         <>
@@ -9,7 +11,8 @@ export default function LoginPage() {
             <p>비밀번호</p>
             <input type="text"/>
             <button>로그인</button>
-            <p>계정이 없으신가요? 회원가입</p>
+            <p>계정이 없으신가요?</p>
+            <Link to='/sign-up'>회원가입</Link>
         </>
     )
 }
