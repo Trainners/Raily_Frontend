@@ -1,7 +1,7 @@
 import {Route, Routes} from "react-router-dom"
-import LoginPage from "../pages/login/ui/LoginPage.tsx";
 import SignupPage from "../pages/signup/ui/SignupPage.tsx";
 import {ScreenShell} from "../widgets/screen-shell/ui/ScreenShell.tsx";
+import {LoginPage} from "../pages/login/ui/LoginPage.tsx";
 
 export default function App() {
     return (
