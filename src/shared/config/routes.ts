@@ -19,7 +19,7 @@ export const ROUTES = {
 
 export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
     [ROUTES.LOGIN]: {
-        title: '코레일 로그인',
+        title: 'Raily 로그인',
         showBackButton: false,
         showTabBar: false,
     },

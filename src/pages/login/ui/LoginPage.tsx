@@ -5,26 +5,26 @@ import {LoginForm} from "../../../features/login";
 
 export default function LoginPage() {
 
-     const navigate = useNavigate();
+    const navigate = useNavigate();
 
-     const handleLoginSuccess = () => {
-         navigate(ROUTES.JOURNEY_SETUP, {replace: true})
-     }
+    const handleLoginSuccess = () => {
+        navigate(ROUTES.JOURNEY_SETUP, {replace: true})
+    }
 
     return (
         <div>
-            {/* 1. 상단 서비스 브랜딩 */}
+            {/* 상단 서비스 브랜드 마크 */}
             <div>
-                <BrandMark />
+                <BrandMark/>
                 <p>
-                    입석·좌석 분할 예매 관리 서비스
+                    자유석 빈자리 찾기 서비스
                 </p>
             </div>
 
-            {/* 2. 핵심 로그인 기능 삽입 */}
-            <LoginForm onSuccess={handleLoginSuccess} />
+            {/* 핵심 로그인 기능 */}
+            <LoginForm onSuccess={handleLoginSuccess}/>
 
-            {/* 3. 하단 네비게이션 링크 */}
+            {/* 하단 네비게이션 링크 */}
             <div>
                 <span>아직 계정이 없으신가요? </span>
                 <Link to={ROUTES.SIGNUP}>

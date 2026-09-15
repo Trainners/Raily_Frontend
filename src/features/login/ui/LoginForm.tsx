@@ -18,7 +18,7 @@ function validate(values: LoginRequest): LoginErrors {
         errors.email = "이메일을 입력해주세요."
     }
     if (!values.password.trim()) {
-        errors.password = "비밀번호를 입력해 주세요."
+        errors.password = "비밀번호를 입력해주세요."
     }
     return errors;
 }
