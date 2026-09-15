@@ -1,0 +1,36 @@
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.color {
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.free {
+  background: var(--seat-free-bg);
+}
+
+.sold {
+  background: var(--seat-sold-bg);
+}
+
+.mine {
+  background: var(--seat-mine-bg);
+}
+
+.label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
