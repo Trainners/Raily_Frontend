@@ -1,7 +1,6 @@
 import {configureStore} from "@reduxjs/toolkit";
-import {userSlice} from "../../entities/user/model/userSlice.ts";
+import {userApi, userSlice} from "../../entities/user";
 import {journeySlice} from "../../entities/journey/model/journeySlice.ts";
-import {userApi} from "../../entities/user/api/userApi.ts";
 
 export const store = configureStore({
     // 리듀서
