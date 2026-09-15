@@ -3,6 +3,7 @@ import styles from './SeatCell.module.css';
 
 export type SeatCellProps = {
   state: SeatState;
+  onClick?: () => void;
 };
 
 const stateText: Record<SeatState, string> = {
@@ -11,10 +12,15 @@ const stateText: Record<SeatState, string> = {
   mine: '내',
 };
 
-export default function SeatCell({ state }: SeatCellProps) {
+export default function SeatCell({ state, onClick }: SeatCellProps) {
   return (
-    <span className={`${styles.cell} ${styles[state]}`}>
+    // 좌석 클릭으로 상세 시트를 열어야 해서 span 대신 button 사용
+    <button
+      className={`${styles.cell} ${styles[state]}`}
+      type="button"
+      onClick={onClick}
+    >
       {stateText[state]}
-    </span>
+    </button>
   );
 }

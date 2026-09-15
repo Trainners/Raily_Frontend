@@ -3,9 +3,13 @@
   align-items: center;
   justify-content: center;
   padding: 6px 10px;
+  border: none;
   border-radius: 6px;
+  background: transparent;
+  font: inherit;
   font-size: 13px;
   font-weight: 600;
+  cursor: pointer;
 }
 
 .free {
