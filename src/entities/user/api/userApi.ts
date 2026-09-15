@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import type {LoginRequest, LoginResponse} from "../model/types.ts";
+import type { SignUpRequest,LoginRequest, LoginResponse} from "../model/types.ts";
 
 //user api
 export const userApi = createApi({
@@ -13,8 +13,16 @@ export const userApi = createApi({
                 method: 'POST',
                 body: credentials,
             })
+        }),
+        // 회원가입
+        signup: builder.mutation<number, SignUpRequest>({
+            query: (body) => ({
+                url: '/users/signup',
+                method:'POST',
+                body,
+            })
         })
     })
 });
 // endpoint로부터 자동 생성된 훅 export
-export const { useLoginMutation } = userApi;
+export const { useLoginMutation, useSignupMutation } = userApi;
