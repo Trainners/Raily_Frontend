@@ -1,6 +1,15 @@
+import { useLocation } from "react-router-dom";
 import type { Train } from "../../../entities/train";
 import { Note } from "../../../shared/ui";
 import { TrainList } from "../../../widgets/train-list";
+
+// JourneySetupPage에서 navigate로 넘기는 폼 입력값하고 같은 형태
+type JourneySearchState = {
+    from: string;
+    to: string;
+    date: string;
+    afterTime: string;
+}
 
 const mockTrains: Train[] = [
     {
@@ -37,11 +46,18 @@ const mockTrains: Train[] = [
 
 export default function TrainSelectPage() {
     const trains = mockTrains;
+    const location = useLocation();
+
+    // JourneySetupPage 안 거치고 바로 들어오면 state 없을 수도 있어서 null 허용
+    const searchState = location.state as JourneySearchState | null;
+
+    // state 없을 때는 기존에 하드코딩 했던 기본값으로 대체
+    const afterTime = searchState?.afterTime ?? '07:00';
 
     return (
         <main>
             {/* 이후 별도의 검색 조건 요약 바 컴포넌트로 분리 예정 */}
-            <p>07:00 이후 출발 · {trains.length}편</p>
+            <p>{afterTime} 이후 출발 · {trains.length}편</p>
 
             <TrainList
                 trains={trains}
