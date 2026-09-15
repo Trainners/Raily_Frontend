@@ -6,7 +6,9 @@
 }
 
 .label {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 6px;
   margin-bottom: 6px;
   font-size: 13px;
   font-weight: 600;
@@ -17,4 +19,22 @@
   font-size: 18px;
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.mine {
+  border-color: var(--seat-mine-text);
+  background: var(--seat-mine-bg);
+}
+
+.mine .label,
+.mine .value {
+  color: var(--seat-mine-text);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--seat-mine-text);
 }

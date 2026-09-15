@@ -1,4 +1,5 @@
 import { verdictOf, verdictText, type Seat } from '../../../entities/seat';
+import { ReleaseSeatButton } from '../../../features/release-seat';
 import { TakeSeatButton } from '../../../features/take-seat';
 import { Note, Sheet } from '../../../shared/ui';
 import styles from './SeatDetailSheet.module.css';
@@ -9,6 +10,7 @@ export type SeatDetailSheetProps = {
     stops: string[];        // 정차역 목록
     onClose: () => void;    // 오버레이 클릭 또는 닫기 버튼으로 시트 닫기 요청
     onTake: () => void;     // 선택한 좌석에 앉기 버튼 눌렀을 때 실행하는 콜백
+    onRelease: () => void;  // 자리 비움 버튼 눌렀을 때 콜백
 }
 
 // SeatCell에서 빈/판매로 표현되는 것과 다르게 풀네임으로 보여줌
@@ -22,13 +24,19 @@ export default function SeatDetailSheet({
     seat,
     stops,
     onClose,
-    onTake
+    onTake,
+    onRelease
 }: SeatDetailSheetProps) {
     if (seat === null) {
         return null;
     }
 
-    const verdict = verdictOf(seat, stops);
+    // 좌석 상태에 mine이 하나라도 있으면 이미 내가 착석한 좌석
+    const isMySeat = seat.states.some((state) => state === 'mine')
+
+    // verdictOf는 free/sold 조합만 판정해서 내 자리에는 적용 안 됨
+    // 전부 mine이면 partial로 잘못 판정돼서 안내 문구도 내 자리일 때는 생략
+    const verdict = isMySeat ? undefined : verdictOf(seat, stops);
 
     // 인접한 두 역을 구간으로 묶고 좌석 상태도 같이 붙여서 보여줌
     const segments = stops.slice(0, -1).map((from, index) => ({
@@ -68,9 +76,17 @@ export default function SeatDetailSheet({
                     ))}
                 </div>
 
-                <Note>{verdictText(verdict)}</Note>
+                {!isMySeat && verdict && (
+                    <Note>{verdictText(verdict)}</Note>
+                )}
 
-                <TakeSeatButton onTake={onTake} />
+                {/* 내 자리 여부에 따라 버튼 다르게 */}
+                {isMySeat ? (
+                    <ReleaseSeatButton onRelease={onRelease} />
+                ) : (
+                    <TakeSeatButton onTake={onTake} />
+                )}
+
             </div>
         </Sheet>
     )

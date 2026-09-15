@@ -2,11 +2,12 @@ import { useMemo, useState } from 'react';
 import { type Seat, type Verdict, verdictOf, verdictText } from '../../../entities/seat';
 import { type SeatMatrix as SeatMatrixModel } from '../../../widgets/seat-matrix/model'
 import styles from './SeatMatrixPage.module.css';
-import { Button, Card } from '../../../shared/ui';
+import { Button, Card, Note } from '../../../shared/ui';
 import FilterCarChip from '../../../features/filter-car/ui/FilterCarChip';
 import SeatLegend from '../../../widgets/seat-matrix/ui/SeatLegend';
 import { SeatDetailSheet } from '../../../widgets/seat-detail';
 import SeatMatrix from '../../../widgets/seat-matrix/ui/SeatMatrix';
+import { ReleaseSeatButton } from '../../../features/release-seat';
 
 // 임시 목업 데이터
 const mockSeatMatrix: SeatMatrixModel = {
@@ -122,6 +123,14 @@ export default function SeatMatrixPage() {
 
     const recommendation = recommendedSeat?.verdict ?? null
 
+    // 내가 착석한 좌석이 있는지 판별
+    const mySeat = useMemo<Seat | undefined>(
+        () =>
+            matrix.seats.find((seat) =>
+                seat.states.some((state) => state === 'mine')
+            ), [matrix.seats]
+    )
+
     // 선택한 좌석의 모든 구간 상태를 mine으로 변경
     const handleTakeSeat = () => {
         if (selectedSeat === null) {
@@ -154,14 +163,51 @@ export default function SeatMatrixPage() {
         setSelectedSeat(null);
     };
 
+    // mySeat의 모든 구간 상태를 free로 되돌림
+    const handleReleaseSeat = () => {
+        if (!mySeat) {
+            return;
+        }
+
+        setMatrix((currentMatrix) => ({
+            ...currentMatrix,
+            seats: currentMatrix.seats.map((seat) =>
+                seat.carNo === mySeat.carNo &&
+                    seat.seatNo === mySeat.seatNo
+                    ? {
+                        ...seat,
+                        states: seat.states.map(() => 'free'),
+                    }
+                    : seat,
+            ),
+        }));
+
+        // 자리 비움 처리가 끝나면 상세 시트 닫음
+        setSelectedSeat(null);
+    };
+
     return (
         <main className={styles.page}>
             <section className={styles.content}>
-                {recommendedSeat && recommendation && (
+                {/* 내 좌석이 있으면 추천 계산 결과보다 내 자리 카드를 우선적으로 보여줌 */}
+                {mySeat ? (
+                    <>
+                        <Card
+                            tone="mine"
+                            label="내 자리"
+                            value={`${mySeat.carNo}호차 ${mySeat.seatNo} · ${matrix.stops[matrix.stops.length - 1]}까지`}
+                        />
+
+                        <Note>
+                            자리가 팔리면 알림을 보내 드립니다.
+                        </Note>
+                    </>
+                ) : (recommendedSeat && recommendation && (
                     <Card
                         label="추천"
                         value={`${recommendedSeat.seat.carNo}호차 ${recommendedSeat.seat.seatNo} · ${verdictText(recommendation)}`}
                     />
+                )
                 )}
 
                 <FilterCarChip
@@ -181,15 +227,20 @@ export default function SeatMatrixPage() {
 
                 <SeatLegend />
 
-                <Button fullWidth variant="ghost">
-                    새로 조회
-                </Button>
+                {mySeat ? (
+                    <ReleaseSeatButton onRelease={handleReleaseSeat} />
+                ) : (
+                    <Button fullWidth variant="ghost">
+                        새로 조회
+                    </Button>
+                )}
 
                 <SeatDetailSheet
                     seat={selectedSeat}
                     stops={matrix.stops}
                     onClose={() => setSelectedSeat(null)}
                     onTake={handleTakeSeat}
+                    onRelease={handleReleaseSeat}
                 />
             </section>
         </main>
