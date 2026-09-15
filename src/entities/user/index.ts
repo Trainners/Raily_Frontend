@@ -1,1 +1,1 @@
-export type { User } from './model/types';
+export type { User, LoginRequest, LoginResponse } from './model/types';

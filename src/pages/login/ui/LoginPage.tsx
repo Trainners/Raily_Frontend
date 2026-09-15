@@ -1,8 +1,8 @@
 // src/pages/login/ui/LoginPage.tsx
 import { Link } from 'react-router-dom';
 import {BrandMark} from "../../../shared/ui";
-import {LoginForm} from "../../../features/login/ui/LoginForm.tsx";
 import {ROUTES} from "../../../shared/config/routes.ts";
+import {LoginForm} from "../../../features/login";
 
 export function LoginPage() {
     return (
@@ -16,7 +16,7 @@ export function LoginPage() {
             </div>
 
             {/* 2. 핵심 로그인 기능 삽입 */}
-            <LoginForm />
+            <LoginForm onSuccess={() => console.log("login success")} />
 
             {/* 3. 하단 네비게이션 링크 */}
             <div>
