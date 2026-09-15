@@ -1,7 +1,8 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import type { Train } from "../../../entities/train";
 import { Note } from "../../../shared/ui";
 import { TrainList } from "../../../widgets/train-list";
+import { ROUTES } from "../../../shared/config/routes";
 
 // JourneySetupPage에서 navigate로 넘기는 폼 입력값하고 같은 형태
 type JourneySearchState = {
@@ -47,6 +48,7 @@ const mockTrains: Train[] = [
 export default function TrainSelectPage() {
     const trains = mockTrains;
     const location = useLocation();
+    const navigate = useNavigate();
 
     // JourneySetupPage 안 거치고 바로 들어오면 state 없을 수도 있어서 null 허용
     const searchState = location.state as JourneySearchState | null;
@@ -61,7 +63,12 @@ export default function TrainSelectPage() {
 
             <TrainList
                 trains={trains}
-                onSelectTrain={(train) => console.log(train)}
+                onSelectTrain={(train) => {
+                    // 선택한 열차 정보를 라우터 state로 넘겨서 SeatMatrixPage에서 location.state로 받음
+                    navigate(ROUTES.SEAT_MATRIX, {
+                        state: train
+                    })
+                }}
             />
 
             <Note>
