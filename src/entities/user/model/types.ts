@@ -15,3 +15,10 @@ export interface LoginResponse {
     email: string;
     name: string;
 }
+
+// 회원가입 요청 api
+export interface SignUpRequest {
+    email: string;
+    password: string;
+    name: string;
+}
