@@ -17,7 +17,7 @@ export const userApi = createApi({
         // 회원가입
         signup: builder.mutation<number, SignUpRequest>({
             query: (body) => ({
-                url: '/users/sigup',
+                url: '/users/signup',
                 method:'POST',
                 body,
             })
@@ -25,4 +25,4 @@ export const userApi = createApi({
     })
 });
 // endpoint로부터 자동 생성된 훅 export
-export const { useLoginMutation } = userApi;
+export const { useLoginMutation, useSignupMutation } = userApi;
