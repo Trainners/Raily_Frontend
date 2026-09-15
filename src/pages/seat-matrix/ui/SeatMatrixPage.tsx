@@ -8,6 +8,8 @@ import SeatLegend from '../../../widgets/seat-matrix/ui/SeatLegend';
 import { SeatDetailSheet } from '../../../widgets/seat-detail';
 import SeatMatrix from '../../../widgets/seat-matrix/ui/SeatMatrix';
 import { ReleaseSeatButton } from '../../../features/release-seat';
+import { useLocation } from 'react-router-dom';
+import type { Train } from '../../../entities/train';
 
 // 임시 목업 데이터
 const mockSeatMatrix: SeatMatrixModel = {
@@ -68,8 +70,17 @@ const verdictPriority: Record<Verdict['kind'], number> = {
 }
 
 export default function SeatMatrixPage() {
-    // 좌석 선택하면 selectedSeat에 저장하고 착석하면 matrix 상태 변경
-    const [matrix, setMatrix] = useState<SeatMatrixModel>(mockSeatMatrix);
+    const location = useLocation();
+
+    // TrainSelectPage에서 navigate로 전달한 열차 정보
+    const selectedTrain = location.state as Train | null;
+
+    // 좌석/정차역 목업은 그대로 두고 trainNo만 실제 선택한 열차 걸로 덮어씀
+    // TrainSelectPage 안 거치고 들어오면 selectedTrain이 없어서 기존 목업 값 사용
+    const [matrix, setMatrix] = useState<SeatMatrixModel>({
+        ...mockSeatMatrix,
+        trainNo: selectedTrain?.trainNo ?? mockSeatMatrix.trainNo
+    });
 
     const [selectedCarNo, setSelectedCarNo] = useState<number | null>(null);
 
