@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {Button, Field} from "../../../shared/ui";
 import type {LoginRequest} from "../../../entities/user";
+import styles from "./LoginForm.module.css"
 
 // 입력할 필드별 에러 문구(에러가 없는 필드는 키가 없거나 undefined)
 type LoginErrors = Partial<Record<keyof LoginRequest, string>>
@@ -52,7 +53,7 @@ export function LoginForm({onSuccess}: LoginFormProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate>
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
             <Field
                 label="이메일"
                 type="email"

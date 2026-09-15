@@ -1,10 +1,16 @@
-// src/pages/login/ui/LoginPage.tsx
-import { Link } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import {BrandMark} from "../../../shared/ui";
 import {ROUTES} from "../../../shared/config/routes.ts";
 import {LoginForm} from "../../../features/login";
 
-export function LoginPage() {
+export default function LoginPage() {
+
+     const navigate = useNavigate();
+
+     const handleLoginSuccess = () => {
+         navigate(ROUTES.JOURNEY_SETUP, {replace: true})
+     }
+
     return (
         <div>
             {/* 1. 상단 서비스 브랜딩 */}
@@ -16,7 +22,7 @@ export function LoginPage() {
             </div>
 
             {/* 2. 핵심 로그인 기능 삽입 */}
-            <LoginForm onSuccess={() => console.log("login success")} />
+            <LoginForm onSuccess={handleLoginSuccess} />
 
             {/* 3. 하단 네비게이션 링크 */}
             <div>
