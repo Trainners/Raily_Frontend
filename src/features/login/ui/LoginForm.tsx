@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {Button, Field} from "../../../shared/ui";
-import type {LoginRequest} from "../../../entities/user/model/types.ts";
+import type {LoginRequest} from "../../../entities/user";
 
 // 입력할 필드별 에러 문구(에러가 없는 필드는 키가 없거나 undefined)
 type LoginErrors = Partial<Record<keyof LoginRequest, string>>
