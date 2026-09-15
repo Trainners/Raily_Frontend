@@ -1,33 +1,74 @@
 import {useState} from "react";
-import {useNavigate} from "react-router-dom";
-import {ROUTES} from "../../../shared/config/routes.ts";
+import {Button, Field} from "../../../shared/ui";
+import type {LoginRequest} from "../../../entities/user/model/types.ts";
 
-export function LoginForm() {
+// 입력할 필드별 에러 문구(에러가 없는 필드는 키가 없거나 undefined)
+type LoginErrors = Partial<Record<keyof LoginRequest, string>>
+
+export type LoginFormProps = {
+    // 입력검증을 통과했을 때 호출
+    onSuccess: () => void;
+}
+
+function validate(values: LoginRequest): LoginErrors {
+    const errors: LoginErrors = {};
+
+    if (!values.email.trim()) {
+        errors.email = "이메일을 입력해주세요."
+    }
+    if (!values.password.trim()) {
+        errors.password = "비밀번호를 입력해 주세요."
+    }
+    return errors;
+}
+
+export function LoginForm({onSuccess}: LoginFormProps) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
+    const [errors, setErrors] = useState<LoginErrors>({});
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // 다시 입력을 시작한 필드의 에러만 지운다
+    const handleEmailChange = (value: string) => {
+        setEmail(value);
+        setErrors((prev) => ({...prev, email: undefined}));
+    };
+
+    const handlePasswordChange = (value: string) => {
+        setPassword(value);
+        setErrors((prev) => ({...prev, password: undefined}));
+    };
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        // 로그인 API 호출 및 인증 상태 갱신 로직
-        navigate(ROUTES.JOURNEY_SETUP);
+
+        const nextErrors = validate({email, password});
+        setErrors(nextErrors);
+
+        if (Object.keys(nextErrors).length > 0) {
+            return;
+        }
+
+        onSuccess();
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input
-                type="text"
-                placeholder="코레일 회원번호"
+        <form onSubmit={handleSubmit} noValidate>
+            <Field
+                label="이메일"
+                type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="example@email.com"
+                error={errors.email}
+                onChange={handleEmailChange}
             />
-            <input
+            <Field
+                label="비밀번호"
                 type="password"
-                placeholder="비밀번호"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                error={errors.password}
+                onChange={handlePasswordChange}
             />
-            <button type="submit">로그인</button>
+            <Button type="submit">로그인</Button>
         </form>
     );
 }
