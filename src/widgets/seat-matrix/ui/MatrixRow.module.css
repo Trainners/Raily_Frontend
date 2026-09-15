@@ -1,0 +1,19 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.seatNo {
+  width: 32px;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+.cells {
+  display: grid;
+  flex: 1;
+}
