@@ -154,6 +154,14 @@ export default function SeatMatrixPage() {
         setSelectedSeat(null);
     };
 
+    // 내가 착석한 좌석이 있는지 판별
+    const mySeat = useMemo<Seat | undefined>(
+        () =>
+            matrix.seats.find((seat) =>
+                seat.states.some((state) => state === 'mine')
+            ), [matrix.seats]
+    )
+
     return (
         <main className={styles.page}>
             <section className={styles.content}>
