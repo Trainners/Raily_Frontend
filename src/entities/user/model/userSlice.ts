@@ -20,9 +20,17 @@ export const userSlice = createSlice({
             const { accessToken, email, name } = action.payload;
             state.accessToken = accessToken;
             state.currentUser = { email, name };
+
+            // shared/api/client.ts가 요청 헤더 붙일 때 여기서 읽어감
+            localStorage.setItem('accessToken', accessToken);
         },
         // 로그아웃 (인증 정보 초기화)
-        clearCredentials: () => initialState,
+        clearCredentials: () => {
+            // 로그아웃 후에도 요청에 이전 토큰이 계속 붙지 않도록 같이 제거
+            localStorage.removeItem('accessToken');
+
+            return initialState;
+        }
     },
 });
 

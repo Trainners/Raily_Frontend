@@ -1,12 +1,11 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { baseQuery } from '../../../shared/api/client';
 import type { Train, TrainApiResponse, TrainSearchParams } from '../model/types';
 
 export const trainApi = createApi({
     reducerPath: 'trainApi',
     // 요청 base 엔드포인트
-    baseQuery: fetchBaseQuery({
-        baseUrl: '/api'
-    }),
+    baseQuery,
     endpoints: (builder) => ({
         getTrains: builder.query<Train[], TrainSearchParams>({
             query: (params) => ({
