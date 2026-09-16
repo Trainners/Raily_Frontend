@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://<EC2-퍼블릭-IP>:8080/api/:path*"
+      "destination": "http://54.116.47.123:8080/api/:path*"
     },
     {
       "source": "/:path*",
