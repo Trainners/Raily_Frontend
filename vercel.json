@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://organized-exercise-nonprofit-ping.trycloudflare.com:8080/api/:path*"
+      "destination": "https://organized-exercise-nonprofit-ping.trycloudflare.com/api/:path*"
     },
     {
       "source": "/:path*",
