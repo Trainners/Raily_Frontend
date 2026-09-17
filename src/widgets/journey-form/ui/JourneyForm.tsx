@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Button, Card, Select } from '../../../shared/ui';
 import styles from './JourneyForm.module.css';
+import { STATIONS } from '../../../entities/station';
+import { StationCombobox } from '../../../features/pick-station';
 
 export type JourneyFormProps = {
   recentSegment?: {   // 최근 조회했던 출발-도착 구간, 있으면 '이 구간으로 채우기' 카드 표시
@@ -63,25 +65,27 @@ export default function JourneyForm({
         />
       )}
 
-      <Select
+      <StationCombobox
         label="출발역"
         value={from}
         placeholder="출발역을 선택하세요"
-        onOpen={() => setFrom('천안')}
+        stops={STATIONS}
+        onSelect={setFrom}
       />
 
-      <Select
+      <StationCombobox
         label="도착역"
         value={to}
         placeholder="도착역을 선택하세요"
-        onOpen={() => setTo('영등포')}
+        stops={STATIONS}
+        onSelect={setTo}
       />
 
       <Select
         label="날짜"
         value={date}
         placeholder="날짜를 선택하세요"
-        onOpen={() => setDate('2026-09-11 (금)')}
+        onOpen={() => setDate('2026-09-18 (금)')}
       />
 
       <Select
