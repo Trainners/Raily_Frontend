@@ -1,6 +1,7 @@
-import {configureStore} from "@reduxjs/toolkit";
-import {userApi, userSlice} from "../../entities/user";
-import {journeySlice} from "../../entities/journey/model/journeySlice.ts";
+import { configureStore } from "@reduxjs/toolkit";
+import { userApi, userSlice } from "../../entities/user";
+import { journeySlice } from "../../entities/journey/model/journeySlice.ts";
+import { trainApi } from "../../entities/train";
 
 export const store = configureStore({
     // 리듀서
@@ -11,11 +12,15 @@ export const store = configureStore({
         journey: journeySlice.reducer,
         // RTK Query 전용 캐시/로딩 저장소 등록
         [userApi.reducerPath]: userApi.reducer,
+        [trainApi.reducerPath]: trainApi.reducer,
     },
 
     //RTK Query 백그라운드 미들웨어 추가
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(userApi.middleware),
+        getDefaultMiddleware().concat(
+            userApi.middleware,
+            trainApi.middleware
+        ),
 });
 
 //

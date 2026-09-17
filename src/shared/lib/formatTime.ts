@@ -1,4 +1,25 @@
 /*
+백엔드 시각 형식을 화면 시각 형식으로 변환
+
+입력:
+- 'HHmmss' 형식의 6자리 문자열
+- 예: '070100'
+
+반환:
+- 'HH:mm' 형식의 문자열
+- 예: '07:01'
+
+초 단위는 화면에서 사용하지 않으므로 제외
+*/
+
+export function formatApiTime(time: string): string {
+    const hour = time.slice(0, 2);
+    const minute = time.slice(2, 4);
+
+    return `${hour}:${minute}`;
+}
+
+/*
 시작 시간과 종료 시간 기준으로 소요 시간 계산
 
 입력:

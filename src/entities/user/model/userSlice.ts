@@ -22,7 +22,7 @@ export const userSlice = createSlice({
             state.currentUser = { email, name };
         },
         // 로그아웃 (인증 정보 초기화)
-        clearCredentials: () => initialState,
+        clearCredentials: () => initialState
     },
 });
 
