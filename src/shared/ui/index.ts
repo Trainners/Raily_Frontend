@@ -27,3 +27,6 @@ export type { SheetProps } from './Sheet';
 
 export { default as DateSelect } from './DateSelect';
 export type { DateSelectProps } from './DateSelect';
+
+export { default as TimeSelect } from './TimeSelect';
+export type { TimeSelectProps } from './TimeSelect';
