@@ -15,6 +15,7 @@ export const ROUTES = {
     JOURNEY_SETUP: '/journey-setup',
     TRAIN_SELECT: '/train-select',
     SEAT_MATRIX: '/seat-matrix',
+    SETTINGS: '/settings',
 } as const;
 
 export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
@@ -44,4 +45,9 @@ export const ROUTE_CONFIGS: Record<string, RouteConfig> = {
         showTabBar: false,
         rightAction: 'LIVE',
     },
+    [ROUTES.SETTINGS]: {
+        title: '설정',
+        showBackButton: false,
+        showTabBar: true,
+    }
 };
