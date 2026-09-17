@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Card, DateSelect, Select } from '../../../shared/ui';
+import { Button, Card, DateSelect, TimeSelect } from '../../../shared/ui';
 import styles from './JourneyForm.module.css';
 import { STATIONS } from '../../../entities/station';
 import { StationCombobox } from '../../../features/pick-station';
@@ -87,11 +87,10 @@ export default function JourneyForm({
         onChange={setDate}
       />
 
-      <Select
+      <TimeSelect
         label="이 시각 이후"
         value={afterTime}
-        placeholder="출발 시각을 선택하세요"
-        onOpen={() => setAfterTime('07:00')}
+        onChange={setAfterTime}
       />
 
       <Button fullWidth onClick={handleSubmit}>
