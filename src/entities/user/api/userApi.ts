@@ -1,11 +1,11 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
+import {createApi} from "@reduxjs/toolkit/query/react";
 import type { SignUpRequest,LoginRequest, LoginResponse} from "../model/types.ts";
+import {baseQuery} from "../../../shared/api/client.ts";
 
 //user api
 export const userApi = createApi({
     reducerPath: 'userApi',
-    // 요청 base 엔드포인트
-    baseQuery: fetchBaseQuery({ baseUrl: '/api'}),
+    baseQuery,
     endpoints: (builder) => ({
         login: builder.mutation<LoginResponse, LoginRequest>({
             query: (credentials) => ({
