@@ -23,7 +23,7 @@ export const store = configureStore({
             trainApi.middleware
         ),
     //운영 환경에서는 Redux DevTool를 통해 store에 접근할 수 없도록 연결을 끊음(보안상 토큰 탈취를 막기 위함)
-    devTools: import.meta.env.Dev,
+    devTools: import.meta.env.DEV,
 });
 
 //

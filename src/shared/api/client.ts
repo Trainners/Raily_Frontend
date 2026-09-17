@@ -1,4 +1,3 @@
-// 원래는 빈 파일이었는데 trainApi.ts 깨져서 인증 헤더 로직만 빼고 작성해둠
 import { fetchBaseQuery } from "@reduxjs/toolkit/query";
 
 // type로 필요한 state모양만 구조적으로 선언하여 사용
