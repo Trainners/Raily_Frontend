@@ -10,4 +10,4 @@ export {
     selectIsAuthenticated,
 } from './model/userSlice';
 
-export { userApi, useLoginMutation, useSignupMutation } from './api'
+export { userApi, useLoginMutation, useSignupMutation, useReissueMutation, useLogoutMutation } from './api'

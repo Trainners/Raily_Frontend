@@ -4,12 +4,15 @@ import App from './App.tsx'
 import {BrowserRouter} from "react-router-dom";
 import {Provider} from "react-redux";
 import {store} from "./store/store.ts";
+import {AuthBootstrap} from "./providers";
 
 createRoot(document.getElementById('root')!).render(
     <Provider store={store}>
-        <BrowserRouter>
-            <App/>
-        </BrowserRouter>
+        <AuthBootstrap>
+            <BrowserRouter>
+                <App/>
+            </BrowserRouter>
+        </AuthBootstrap>
     </Provider>
 
 )

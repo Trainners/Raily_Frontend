@@ -11,8 +11,9 @@ export interface UserState {
     currentUser: User | null;
 }
 
+// 앱 시작 직후에 reissue 결과를 기다리는 상태로 초기화
 const initialState: UserState = {
-    status: 'anonymous',
+    status: 'restoring',
     accessToken: null,
     currentUser: null,
 };
