@@ -1,6 +1,6 @@
 import type { LoginResponse, User } from "./types.ts";
 import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
-import {sessionExpired, tokenReissued} from "../../../shared/api/authEvent.ts";
+import {sessionExpired, tokenReissued} from "../../../shared/api/authEvents.ts";
 
 // restoring: 앱 시작 직후 reissue 응답을 기다리는 상태
 export type AuthStatus = 'restoring' | 'authenticated' | 'anonymous';
@@ -29,12 +29,12 @@ export const userSlice = createSlice({
         // 로그인 성공시 토큰, 유저정보 저장
         setCredentials: (state, action: PayloadAction<LoginResponse>) => {
             const { accessToken, email, name } = action.payload;
-            state.status = 'authenticated';          // ★
+            state.status = 'authenticated';
             state.accessToken = accessToken;
             state.currentUser = { email, name };
         },
         // 로그아웃 (인증 정보 초기화) — 사용자가 직접 로그아웃한 경우
-        clearCredentials: () => anonymousState,      // ★ initialState → anonymousState
+        clearCredentials: () => anonymousState,
     },
     // shared에서 발행한 인증 이벤트에 반응
     extraReducers: (builder) => {
@@ -55,5 +55,5 @@ type UserRootState = { user: UserState };
 export const selectAccessToken = (state: UserRootState) => state.user.accessToken;
 export const selectCurrentUser = (state: UserRootState) => state.user.currentUser;
 export const selectAuthStatus = (state: UserRootState) => state.user.status;
-// 인증 여부를 토큰 유무로 파싱하는 방식에서 status로 판단 하는 방법으로 변경 (restoring은 인증된 상태가 아님)
+// 인증 여부를 토큰 유무로 파싱하는 방식에서 status로 판단 하는 방법으로 변경 (restoring은 인증된 상태가 아니라 재인증을 받는 과정을 의미)
 export const selectIsAuthenticated = (state: UserRootState) => state.user.status === 'authenticated';
