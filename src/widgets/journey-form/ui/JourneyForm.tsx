@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Card, Select } from '../../../shared/ui';
+import { Button, Card, DateSelect, Select } from '../../../shared/ui';
 import styles from './JourneyForm.module.css';
 import { STATIONS } from '../../../entities/station';
 import { StationCombobox } from '../../../features/pick-station';
@@ -81,11 +81,10 @@ export default function JourneyForm({
         onSelect={setTo}
       />
 
-      <Select
+      <DateSelect
         label="날짜"
         value={date}
-        placeholder="날짜를 선택하세요"
-        onOpen={() => setDate('2026-09-18 (금)')}
+        onChange={setDate}
       />
 
       <Select
