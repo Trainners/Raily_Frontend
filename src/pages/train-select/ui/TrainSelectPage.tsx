@@ -49,9 +49,11 @@ export default function TrainSelectPage() {
                 <TrainList
                     trains={trains}
                     onSelectTrain={(train) => {
-                        // 선택한 열차를 store에 저장. seatMAtrixPage와 TabBar가 같은 값을 읽는다.
+                        // 탭바("내 여정")가 읽을 수 있게 store에 저장
                         dispatch(selectTrain(train));
-                        navigate(ROUTES.SEAT_MATRIX);
+                        // SeatMatrixPage는 #30 전까지 location.state로 열차를 받으므로 함께 넘긴다
+                        // TODO(#30): SeatMatrixPage가 selectSelectedTrain을 읽게 되면 state 전달 제거
+                        navigate(ROUTES.SEAT_MATRIX, { state: train });
                     }}
                 />
             )}
