@@ -65,3 +65,11 @@ export type SeatSearchParams = {
     time: string;
     trainNum: string;
 }
+
+/*
+좌석 조회 API가 반환하는 화면 데이터
+*/
+export type SeatMatrixData = {
+    stops: string[];
+    seats: Seat[];
+}
