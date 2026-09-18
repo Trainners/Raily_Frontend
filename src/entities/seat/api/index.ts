@@ -1,0 +1,1 @@
+export { seatApi, useGetSeatsQuery } from './seatApi'
