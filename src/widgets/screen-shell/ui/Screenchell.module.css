@@ -1,0 +1,10 @@
+.shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;          /* 모바일 주소창 변화에 맞춰 줄어드는 뷰포트 높이 */
+}
+
+.main {
+    flex: 1;                     /* 본문이 남는 높이를 채워 탭바가 항상 바닥에 */
+    padding: 16px 0 24px;
+}
