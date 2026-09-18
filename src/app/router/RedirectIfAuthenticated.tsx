@@ -4,7 +4,7 @@ import {LoadingScreen} from "../../shared/ui";
 import {Navigate, Outlet} from "react-router-dom";
 import {ROUTES} from "../../shared/config/routes.ts";
 
-// 로그인,화원가입처럼 이미 로그인 했으면 볼 필요 없는 화면들을 감싼다
+// 로그인,회원가입처럼 이미 로그인 했으면 볼 필요 없는 화면들을 감싼다
 export function RedirectIfAuthenticated() {
     const status = useAppSelector(selectAuthStatus);
 
