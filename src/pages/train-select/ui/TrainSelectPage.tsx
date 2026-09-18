@@ -28,10 +28,10 @@ export default function TrainSelectPage() {
         ? {
             departureStation: searchState.from,
             arrivalStation: searchState.to,
-            // 백엔드가 date/time을 yyyyMMdd/HHmm 숫자 형식으로 받아서
+            // 백엔드가 date/time을 yyyyMMdd/HHmmss 숫자 형식으로 받아서
             // 화면 표시용 문자열에서 숫자만 뽑아 변환
             date: searchState.date.replace(/[^0-9]/g, ''),
-            time: searchState.afterTime.replace(/[^0-9]/g, '')
+            time: searchState.afterTime.replace(/[^0-9]/g, '') + '00'
         }
         : undefined;
 
