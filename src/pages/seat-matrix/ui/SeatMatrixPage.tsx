@@ -8,8 +8,10 @@ import SeatLegend from '../../../widgets/seat-matrix/ui/SeatLegend';
 import { SeatDetailSheet } from '../../../widgets/seat-detail';
 import SeatMatrix from '../../../widgets/seat-matrix/ui/SeatMatrix';
 import { ReleaseSeatButton } from '../../../features/release-seat';
-import { useLocation } from 'react-router-dom';
-import type { Train } from '../../../entities/train';
+import { useAppSelector } from '../../../app/store/hooks';
+import { selectSelectedTrain } from '../../../entities/journey';
+import { Navigate } from 'react-router-dom';
+import { ROUTES } from '../../../shared/config/routes';
 
 // 임시 목업 데이터
 const mockSeatMatrix: SeatMatrixModel = {
@@ -70,13 +72,9 @@ const verdictPriority: Record<Verdict['kind'], number> = {
 }
 
 export default function SeatMatrixPage() {
-    const location = useLocation();
-
-    // TrainSelectPage에서 navigate로 전달한 열차 정보
-    const selectedTrain = location.state as Train | null;
+    const selectedTrain = useAppSelector(selectSelectedTrain);
 
     // 좌석/정차역 목업은 그대로 두고 trainNo만 실제 선택한 열차 걸로 덮어씀
-    // TrainSelectPage 안 거치고 들어오면 selectedTrain이 없어서 기존 목업 값 사용
     const [matrix, setMatrix] = useState<SeatMatrixModel>({
         ...mockSeatMatrix,
         trainNo: selectedTrain?.trainNo ?? mockSeatMatrix.trainNo
@@ -196,6 +194,16 @@ export default function SeatMatrixPage() {
         // 자리 비움 처리가 끝나면 상세 시트 닫음
         setSelectedSeat(null);
     };
+
+    // 선택한 열차 없이 들어온 경우 여정 검색으로 이동
+    if (!selectedTrain) {
+        return (
+            <Navigate 
+                to={ROUTES.JOURNEY_SETUP}
+                replace
+            />
+        )
+    }
 
     return (
         <main className={styles.page}>
