@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../app/store/hooks";
 import { selectCurrentUser } from "../../../entities/user";
-import { Button } from "../../../shared/ui";
+import { LogoutButton } from "../../../features/logout";
+import { ROUTES } from "../../../shared/config/routes";
 import styles from "./SettingsPage.module.css"
 
 export default function SettingsPage() {
+    const navigate = useNavigate()
     const currentUser = useAppSelector(selectCurrentUser)
     const email = currentUser?.email ?? ''
     const name = currentUser?.name ?? ''
@@ -21,9 +24,7 @@ export default function SettingsPage() {
             </div>
 
             <div className={styles.logoutButton}>
-                <Button fullWidth>
-                    로그아웃
-                </Button>
+                <LogoutButton onLoggedOut={() => navigate(ROUTES.LOGIN, { replace: true })} />
             </div>
         </main>
     )
