@@ -1,4 +1,4 @@
-import {Route, Routes} from "react-router-dom"
+import {Navigate, Route, Routes} from "react-router-dom"
 
 import {ROUTES} from "../shared/config/routes.ts";
 import {ScreenShell} from "../widgets/screen-shell";
@@ -27,6 +27,8 @@ export default function App() {
                     <Route path={ROUTES.SEAT_MATRIX} element={<SeatMatrixPage />} />
                     <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
                 </Route>
+                {/*정의되지 않은 경로 : 여정 검색으로 보내고, 로그인 여부는 RequireAuth가 판단*/}
+                <Route path="*" element={<Navigate to={ROUTES.JOURNEY_SETUP} replace />} />
             </Route>
         </Routes>
     )
