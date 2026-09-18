@@ -75,10 +75,16 @@ export default function SeatMatrixPage() {
     const selectedTrain = useAppSelector(selectSelectedTrain);
 
     // 좌석/정차역 목업은 그대로 두고 trainNo만 실제 선택한 열차 걸로 덮어씀
-    const [matrix, setMatrix] = useState<SeatMatrixModel>({
+    const matrix: SeatMatrixModel = {
         ...mockSeatMatrix,
         trainNo: selectedTrain?.trainNo ?? mockSeatMatrix.trainNo
-    });
+    };
+
+    // 내가 착석한 좌석의 번호만 별도로 관리
+    const [mySeatKey, setMySeatKey] = useState<{
+        carNo: number;
+        seatNo: string;
+    } | null>(null);
 
     const [selectedCarNo, setSelectedCarNo] = useState<number | null>(null);
 
@@ -86,28 +92,51 @@ export default function SeatMatrixPage() {
     // null이면 시트를 닫힌 상태로 생각
     const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
+    // 서버에서 받은 좌석 데이터에 내가 착석한 좌석 상태만 mine으로 덧씌운 화면용 좌석 목록
+    const displaySeats = useMemo(
+        () =>
+            matrix.seats.map((seat) => {
+                const isMySeat =
+                    mySeatKey !== null &&
+                    seat.carNo === mySeatKey.carNo &&
+                    seat.seatNo === mySeatKey.seatNo;
+
+                if (!isMySeat) {
+                    return seat
+                }
+
+                return {
+                    ...seat,
+                    // 일부 구간만 판매됐어도 착석 확정 시 전 구간을 mine으로 처리
+                    // 추후 연동 시 재검토 필요
+                    states: seat.states.map(() => 'mine' as const)
+                }
+            }),
+        [matrix.seats, mySeatKey]
+    )
+
     // 목업 데이터에 있는 호차 번호만 중복 없이 뽑아서 필터 칩 목록으로 사용
     const carNos = useMemo(
         () =>
-            [...new Set(matrix.seats.map((seat) => seat.carNo))],
-        [matrix.seats]
+            [...new Set(displaySeats.map((seat) => seat.carNo))],
+        [displaySeats]
     )
 
     // selectedCarNo가 null이면 필터링 없이 전체 좌석 사용
     const filteredSeats = useMemo(
         () =>
             selectedCarNo === null
-                ? matrix.seats
-                : matrix.seats.filter(
+                ? displaySeats
+                : displaySeats.filter(
                     (seat) => seat.carNo === selectedCarNo,
                 ),
-        [matrix.seats, selectedCarNo]
+        [displaySeats, selectedCarNo]
     )
 
     const recommendedSeat = useMemo(() => {
         // verdictOf를 reduce 비교마다 반복 호출하지 않도록
         // 좌석마다 판정 결과를 미리 한 번씩만 계산해서 같이 보관
-        const seatsWithVerdict = matrix.seats.map((seat) => ({
+        const seatsWithVerdict = displaySeats.map((seat) => ({
             seat,
             verdict: verdictOf(seat, matrix.stops)
         }))
@@ -128,68 +157,39 @@ export default function SeatMatrixPage() {
                 ? current
                 : best
         }, null)
-    }, [matrix.seats, matrix.stops])
+    }, [displaySeats, matrix.stops])
 
     const recommendation = recommendedSeat?.verdict ?? null
 
-    // 내가 착석한 좌석이 있는지 판별
+    // 내가 착석한 좌석
     const mySeat = useMemo<Seat | undefined>(
         () =>
-            matrix.seats.find((seat) =>
-                seat.states.some((state) => state === 'mine')
-            ), [matrix.seats]
+            displaySeats.find((seat) =>
+                mySeatKey !== null &&
+                seat.carNo === mySeatKey.carNo &&
+                seat.seatNo === mySeatKey.seatNo
+            ),
+        [displaySeats, mySeatKey]
     )
 
-    // 선택한 좌석의 모든 구간 상태를 mine으로 변경
+    // 선택한 좌석을 내 자리로 기록 (구간 상태 덧씌우기는 displaySeats에서)
     const handleTakeSeat = () => {
         if (selectedSeat === null) {
             return;
         }
 
-        setMatrix((currentMatrix) => ({
-            ...currentMatrix,
-            seats: currentMatrix.seats.map((seat) => {
-                // 호차 안에서는 seatNo가 유일하지만 호차가 다르면 seatNo가 겹칠 수 있어서
-                // carNo까지 같이 비교해야 정확히 같은 좌석을 찾을 수 있음
-                const isSelectedSeat =
-                    seat.carNo === selectedSeat.carNo &&
-                    seat.seatNo === selectedSeat.seatNo;
-
-                if (!isSelectedSeat) {
-                    return seat;
-                }
-
-                return {
-                    ...seat,
-                    // 실제로는 일부 구간만 판매됐어도 착석 확정 시 전 구간을 mine으로 처리
-                    // 추후 연동 시 재검토 필요
-                    states: seat.states.map(() => 'mine' as const),
-                };
-            }),
-        }));
+        setMySeatKey({
+            carNo: selectedSeat.carNo,
+            seatNo: selectedSeat.seatNo,
+        })
 
         // 착석 처리가 끝나면 상세 시트 닫음
         setSelectedSeat(null);
     };
 
-    // mySeat의 모든 구간 상태를 free로 되돌림
+    // 내 자리 해제
     const handleReleaseSeat = () => {
-        if (!mySeat) {
-            return;
-        }
-
-        setMatrix((currentMatrix) => ({
-            ...currentMatrix,
-            seats: currentMatrix.seats.map((seat) =>
-                seat.carNo === mySeat.carNo &&
-                    seat.seatNo === mySeat.seatNo
-                    ? {
-                        ...seat,
-                        states: seat.states.map(() => 'free'),
-                    }
-                    : seat,
-            ),
-        }));
+        setMySeatKey(null)
 
         // 자리 비움 처리가 끝나면 상세 시트 닫음
         setSelectedSeat(null);
@@ -198,7 +198,7 @@ export default function SeatMatrixPage() {
     // 선택한 열차 없이 들어온 경우 여정 검색으로 이동
     if (!selectedTrain) {
         return (
-            <Navigate 
+            <Navigate
                 to={ROUTES.JOURNEY_SETUP}
                 replace
             />
