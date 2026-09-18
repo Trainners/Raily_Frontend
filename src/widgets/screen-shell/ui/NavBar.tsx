@@ -1,32 +1,34 @@
 import {useLocation, useNavigate} from "react-router-dom";
-import {ROUTE_CONFIGS} from "../../../shared/config/routes.ts";
+import {getRouteConfig, ROUTES} from "../../../shared/config/routes.ts";
+import styles from "./NavBar.module.css"
 
 export function NavBar() {
     const location = useLocation();
     const navigate = useNavigate();
+    const config = getRouteConfig(location.pathname);
 
-    const config = ROUTE_CONFIGS[location.pathname] || {
-        // 기본값
-        title: 'Raily',
-        showBackButton: false,
-        showTabBar: false,
-    };
+    const handleBack = () => {
+        const isFirstEntry = location.key === 'default';
+        if (isFirstEntry) {
+            navigate(config.backTo ?? ROUTES.JOURNEY_SETUP, { replace: true });
+        } else {
+            navigate(-1);
+        }
+    }
 
     return (
-        <header>
-            <div>
-                {config.showBackButton? (
-                    <button type="button" onClick={() => navigate(-1)} aria-label="뒤로가기">
-                        뒤로가기
+        <header className={styles.bar}>
+            <div className={styles.side}>
+                {config.showBackButton && (
+                    <button type="button" className={styles.back} onClick={handleBack} aria-label="뒤로가기">
+                        ‹
                     </button>
-                ) : (
-                    <span>Raily</span>
-                    )}
+                )}
             </div>
-            <h2>{config.title}</h2>
-            <div>{config.rightAction === 'LIVE' && (
-                <span>LIVE</span>
-            )}</div>
+            <h1 className={styles.title}>{config.title}</h1>
+            <div className={styles.side}>
+                {config.rightAction === 'LIVE' && <span className={styles.live}>LIVE</span>}
+            </div>
         </header>
-    )
+    );
 }

@@ -1,0 +1,30 @@
+.bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border-default);
+    /*홈 인디케이터 기기 대응용*/
+    padding-bottom: env(safe-area-inset-bottom);
+}
+
+.tab {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.active {
+    color: var(--accent-text);
+}
+
+.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
