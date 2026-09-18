@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react';
-import { type Seat, type Verdict, verdictOf, verdictText } from '../../../entities/seat';
-import { type SeatMatrix as SeatMatrixModel } from '../../../widgets/seat-matrix/model'
+import { type Seat, type SeatSearchParams, useGetSeatsQuery, type Verdict, verdictOf, verdictText } from '../../../entities/seat';
 import styles from './SeatMatrixPage.module.css';
 import { Button, Card, Note } from '../../../shared/ui';
 import FilterCarChip from '../../../features/filter-car/ui/FilterCarChip';
@@ -9,57 +8,9 @@ import { SeatDetailSheet } from '../../../widgets/seat-detail';
 import SeatMatrix from '../../../widgets/seat-matrix/ui/SeatMatrix';
 import { ReleaseSeatButton } from '../../../features/release-seat';
 import { useAppSelector } from '../../../app/store/hooks';
-import { selectSelectedTrain } from '../../../entities/journey';
+import { selectJourneySearch, selectSelectedTrain, toSearchParams } from '../../../entities/journey';
 import { Navigate } from 'react-router-dom';
 import { ROUTES } from '../../../shared/config/routes';
-
-// 임시 목업 데이터
-const mockSeatMatrix: SeatMatrixModel = {
-    trainNo: 'KTX-001',
-    stops: ['천안', '평택', '오산', '수원', '영등포'],
-    seats: [
-        {
-            carNo: 1,
-            seatNo: '1A',
-            states: ['free', 'free', 'free', 'free'],
-        },
-        {
-            carNo: 1,
-            seatNo: '1B',
-            states: ['free', 'sold', 'free', 'free'],
-        },
-        {
-            carNo: 1,
-            seatNo: '2A',
-            states: ['sold', 'sold', 'free', 'free'],
-        },
-        {
-            carNo: 2,
-            seatNo: '1A',
-            states: ['free', 'free', 'sold', 'sold'],
-        },
-        {
-            carNo: 2,
-            seatNo: '1B',
-            states: ['sold', 'free', 'free', 'free'],
-        },
-        {
-            carNo: 2,
-            seatNo: '2A',
-            states: ['sold', 'sold', 'sold', 'sold'],
-        },
-        {
-            carNo: 3,
-            seatNo: '1A',
-            states: ['free', 'free', 'free', 'sold'],
-        },
-        {
-            carNo: 3,
-            seatNo: '1B',
-            states: ['free', 'sold', 'free', 'sold'],
-        },
-    ],
-}
 
 // 좌석의 verdictOf 결과를 기준으로 가장 오래 앉아갈 수 있는 좌석 선택
 // 우선순위는 full > until/from > partial > none
@@ -73,14 +24,21 @@ const verdictPriority: Record<Verdict['kind'], number> = {
 
 export default function SeatMatrixPage() {
     const selectedTrain = useAppSelector(selectSelectedTrain);
+    const search = useAppSelector(selectJourneySearch);
 
-    // 좌석/정차역 목업은 그대로 두고 trainNo만 실제 선택한 열차 걸로 덮어씀
-    const matrix: SeatMatrixModel = {
-        ...mockSeatMatrix,
-        trainNo: selectedTrain?.trainNo ?? mockSeatMatrix.trainNo
-    };
+    const seatSearchParams: SeatSearchParams | undefined =
+        selectedTrain && search
+            ? {
+                ...toSearchParams(search),
+                trainNum: selectedTrain.trainNo,
+            }
+            : undefined;
 
-    // 내가 착석한 좌석의 번호만 별도로 관리
+    const { data } = useGetSeatsQuery(
+        seatSearchParams as SeatSearchParams,
+        { skip: !seatSearchParams },
+    )
+
     const [mySeatKey, setMySeatKey] = useState<{
         carNo: number;
         seatNo: string;
@@ -92,10 +50,15 @@ export default function SeatMatrixPage() {
     // null이면 시트를 닫힌 상태로 생각
     const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
+    const stops = useMemo(
+        () => data?.stops ?? [],
+        [data],
+    )
+
     // 서버에서 받은 좌석 데이터에 내가 착석한 좌석 상태만 mine으로 덧씌운 화면용 좌석 목록
     const displaySeats = useMemo(
         () =>
-            matrix.seats.map((seat) => {
+           (data?.seats ?? []).map((seat) => {
                 const isMySeat =
                     mySeatKey !== null &&
                     seat.carNo === mySeatKey.carNo &&
@@ -107,15 +70,15 @@ export default function SeatMatrixPage() {
 
                 return {
                     ...seat,
-                    // 일부 구간만 판매됐어도 착석 확정 시 전 구간을 mine으로 처리
-                    // 추후 연동 시 재검토 필요
+                    // 착석은 일단 로컬 상태로만 처리
+                    // 일부 구간만 판매됐어도 착석 확정 시 전 구간을 mine으로 표시
                     states: seat.states.map(() => 'mine' as const)
                 }
             }),
-        [matrix.seats, mySeatKey]
+        [data, mySeatKey]
     )
 
-    // 목업 데이터에 있는 호차 번호만 중복 없이 뽑아서 필터 칩 목록으로 사용
+    // 응답에 있는 호차 번호만 중복 없이 뽑아서 필터 칩 목록으로 사용
     const carNos = useMemo(
         () =>
             [...new Set(displaySeats.map((seat) => seat.carNo))],
@@ -138,7 +101,7 @@ export default function SeatMatrixPage() {
         // 좌석마다 판정 결과를 미리 한 번씩만 계산해서 같이 보관
         const seatsWithVerdict = displaySeats.map((seat) => ({
             seat,
-            verdict: verdictOf(seat, matrix.stops)
+            verdict: verdictOf(seat, stops)
         }))
 
         // verdictPriority 숫자가 더 작은 좌석을 계속 살아남기는 방식으로 순회
@@ -157,7 +120,7 @@ export default function SeatMatrixPage() {
                 ? current
                 : best
         }, null)
-    }, [displaySeats, matrix.stops])
+    }, [displaySeats, stops])
 
     const recommendation = recommendedSeat?.verdict ?? null
 
@@ -214,7 +177,7 @@ export default function SeatMatrixPage() {
                         <Card
                             tone="mine"
                             label="내 자리"
-                            value={`${mySeat.carNo}호차 ${mySeat.seatNo} · ${matrix.stops[matrix.stops.length - 1]}까지`}
+                            value={`${mySeat.carNo}호차 ${mySeat.seatNo} · ${stops[stops.length - 1]}까지`}
                         />
 
                         <Note>
@@ -238,7 +201,8 @@ export default function SeatMatrixPage() {
                 <SeatMatrix
                     // SeatMatrix는 전체 모델 형태를 기대하므로 seats만 필터링 결과로 바꿔서 전달
                     matrix={{
-                        ...matrix,
+                        trainNo: selectedTrain.trainNo,
+                        stops,
                         seats: filteredSeats,
                     }}
                     onSeatClick={setSelectedSeat}
@@ -256,7 +220,7 @@ export default function SeatMatrixPage() {
 
                 <SeatDetailSheet
                     seat={selectedSeat}
-                    stops={matrix.stops}
+                    stops={stops}
                     onClose={() => setSelectedSeat(null)}
                     onTake={handleTakeSeat}
                     onRelease={handleReleaseSeat}
