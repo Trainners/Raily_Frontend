@@ -7,7 +7,15 @@ export interface RouteConfig {
     // 하단 탭바 표기 상태
     showTabBar: boolean;
     rightAction?: 'LIVE' | 'REFRESH' | 'NONE';
+    backTo?: string;
 }
+
+// 매칭되는 설정이 없을 때(정의되지 않은 경로)의 기본값
+const DEFAULT_ROUTE_CONFIG: RouteConfig = {title: 'Raily', showBackButton: false, showTabBar: false};
+
+// NavBar와 ScreenShell이 각자 fallback을 갖던 것을 한곳으로 모음
+export const getRouteConfig = (pathname: string) : RouteConfig =>
+    ROUTE_CONFIGS[pathname] ?? DEFAULT_ROUTE_CONFIG;
 
 export const ROUTES = {
     LOGIN: '/',
