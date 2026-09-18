@@ -5,3 +5,20 @@ export type Train = {
     departureTime: string;
     arrivalTime: string;
 };
+
+// 백엔드 TrainListResponse하고 1:1로 응답 맞추기
+export type TrainApiResponse = {
+    trainNum: string;
+    trainTypeName: string;
+    departureTime: string;
+    arrivalTime: string;
+    expectedDelay: string;
+};
+
+// GET /api/trains 검색 조건
+export type TrainSearchParams = {
+    departureStation: string;
+    arrivalStation: string;
+    date: string;
+    time: string;
+}

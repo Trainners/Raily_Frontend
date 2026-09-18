@@ -1,0 +1,46 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.trigger,
+.input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.trigger {
+    text-align: left;
+    cursor: pointer;
+}
+
+.trigger:focus-visible,
+.input:focus-visible {
+    outline: 2px solid var(--accent-base);
+    outline-offset: 2px;
+}
+
+.selectedValue {
+    color: var(--text-primary);
+}
+
+.placeholder {
+    color: var(--text-secondary);
+}
+
+.input {
+    cursor: pointer;
+}

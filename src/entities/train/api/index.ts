@@ -1,0 +1,1 @@
+export { trainApi, useGetTrainsQuery } from './trainApi'

@@ -1,0 +1,99 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.valueButton {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 16px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.valueButton:focus-visible,
+.input:focus-visible,
+.option:focus-visible {
+    outline: 2px solid var(--accent-base);
+    outline-offset: 2px;
+}
+
+.selectedValue {
+    color: var(--text-primary);
+}
+
+.placeholder {
+    color: var(--text-secondary);
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.input {
+    width: 100%;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--accent-base);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    font-size: 16px;
+    outline: none;
+}
+
+.optionList {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    max-height: 240px;
+    overflow-y: auto;
+    padding: 4px;
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+}
+
+.option {
+    width: 100%;
+    padding: 12px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 15px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.option:hover {
+    background: var(--bg-muted);
+}
+
+.emptyMessage {
+    margin: 0;
+    padding: 16px 12px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    text-align: center;
+}
