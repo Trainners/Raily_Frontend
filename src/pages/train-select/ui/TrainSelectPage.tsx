@@ -3,9 +3,9 @@ import { useGetTrainsQuery } from "../../../entities/train";
 import { Note } from "../../../shared/ui";
 import { TrainList } from "../../../widgets/train-list";
 import { ROUTES } from "../../../shared/config/routes";
-import type { TrainSearchParams } from "../../../entities/train/model/types";
+import type { TrainSearchParams } from "../../../entities/train";
 import {useAppDispatch, useAppSelector} from "../../../app/store/hooks.ts";
-import {selectJourneySearch, selectTrain} from "../../../entities/journey";
+import {selectJourneySearch, selectTrain, toSearchParams} from "../../../entities/journey";
 
 export default function TrainSelectPage() {
     // 훅들
@@ -15,15 +15,8 @@ export default function TrainSelectPage() {
 
     // 훅으로 넘길 값 계산(api 요청 파라미터 형태로 변환)
     const searchParams: TrainSearchParams | undefined = search
-        ? {
-            departureStation: search.from,
-            arrivalStation: search.to,
-            // 백엔드가 date/time을 yyyyMMdd/HHmmss 숫자 형식으로 받아서
-            // 화면 표시용 문자열에서 숫자만 뽑아 변환
-            date: search.date.replace(/[^0-9]/g, ''),
-            time: search.afterTime.replace(/[^0-9]/g, '') + '00',
-        }
-        : undefined;
+        ? toSearchParams(search)
+        : undefined
 
     // search가 없으면 skip으로 요청 블로킹
     const {data:trains = [], isLoading, isError} = useGetTrainsQuery(
