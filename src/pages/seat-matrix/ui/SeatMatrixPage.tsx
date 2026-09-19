@@ -1,63 +1,16 @@
 import { useMemo, useState } from 'react';
-import { type Seat, type Verdict, verdictOf, verdictText } from '../../../entities/seat';
-import { type SeatMatrix as SeatMatrixModel } from '../../../widgets/seat-matrix/model'
+import { type Seat, type SeatSearchParams, useGetSeatsQuery, type Verdict, verdictOf, verdictText } from '../../../entities/seat';
 import styles from './SeatMatrixPage.module.css';
-import { Button, Card, Note } from '../../../shared/ui';
+import { Button, Card, LoadingScreen, Note } from '../../../shared/ui';
 import FilterCarChip from '../../../features/filter-car/ui/FilterCarChip';
 import SeatLegend from '../../../widgets/seat-matrix/ui/SeatLegend';
 import { SeatDetailSheet } from '../../../widgets/seat-detail';
 import SeatMatrix from '../../../widgets/seat-matrix/ui/SeatMatrix';
 import { ReleaseSeatButton } from '../../../features/release-seat';
-import { useLocation } from 'react-router-dom';
-import type { Train } from '../../../entities/train';
-
-// 임시 목업 데이터
-const mockSeatMatrix: SeatMatrixModel = {
-    trainNo: 'KTX-001',
-    stops: ['천안', '평택', '오산', '수원', '영등포'],
-    seats: [
-        {
-            carNo: 1,
-            seatNo: '1A',
-            states: ['free', 'free', 'free', 'free'],
-        },
-        {
-            carNo: 1,
-            seatNo: '1B',
-            states: ['free', 'sold', 'free', 'free'],
-        },
-        {
-            carNo: 1,
-            seatNo: '2A',
-            states: ['sold', 'sold', 'free', 'free'],
-        },
-        {
-            carNo: 2,
-            seatNo: '1A',
-            states: ['free', 'free', 'sold', 'sold'],
-        },
-        {
-            carNo: 2,
-            seatNo: '1B',
-            states: ['sold', 'free', 'free', 'free'],
-        },
-        {
-            carNo: 2,
-            seatNo: '2A',
-            states: ['sold', 'sold', 'sold', 'sold'],
-        },
-        {
-            carNo: 3,
-            seatNo: '1A',
-            states: ['free', 'free', 'free', 'sold'],
-        },
-        {
-            carNo: 3,
-            seatNo: '1B',
-            states: ['free', 'sold', 'free', 'sold'],
-        },
-    ],
-}
+import { useAppSelector } from '../../../app/store/hooks';
+import { selectJourneySearch, selectSelectedTrain, toSearchParams } from '../../../entities/journey';
+import { Navigate } from 'react-router-dom';
+import { ROUTES } from '../../../shared/config/routes';
 
 // 좌석의 verdictOf 결과를 기준으로 가장 오래 앉아갈 수 있는 좌석 선택
 // 우선순위는 full > until/from > partial > none
@@ -70,17 +23,31 @@ const verdictPriority: Record<Verdict['kind'], number> = {
 }
 
 export default function SeatMatrixPage() {
-    const location = useLocation();
+    const selectedTrain = useAppSelector(selectSelectedTrain);
+    const search = useAppSelector(selectJourneySearch);
 
-    // TrainSelectPage에서 navigate로 전달한 열차 정보
-    const selectedTrain = location.state as Train | null;
+    const seatSearchParams: SeatSearchParams | undefined =
+        selectedTrain && search
+            ? {
+                ...toSearchParams(search),
+                trainNum: selectedTrain.trainNo,
+            }
+            : undefined;
 
-    // 좌석/정차역 목업은 그대로 두고 trainNo만 실제 선택한 열차 걸로 덮어씀
-    // TrainSelectPage 안 거치고 들어오면 selectedTrain이 없어서 기존 목업 값 사용
-    const [matrix, setMatrix] = useState<SeatMatrixModel>({
-        ...mockSeatMatrix,
-        trainNo: selectedTrain?.trainNo ?? mockSeatMatrix.trainNo
-    });
+    const {
+        data,
+        isLoading,
+        isError,
+        error,
+    } = useGetSeatsQuery(
+        seatSearchParams as SeatSearchParams,
+        { skip: !seatSearchParams },
+    )
+
+    const [mySeatKey, setMySeatKey] = useState<{
+        carNo: number;
+        seatNo: string;
+    } | null>(null);
 
     const [selectedCarNo, setSelectedCarNo] = useState<number | null>(null);
 
@@ -88,30 +55,58 @@ export default function SeatMatrixPage() {
     // null이면 시트를 닫힌 상태로 생각
     const [selectedSeat, setSelectedSeat] = useState<Seat | null>(null);
 
-    // 목업 데이터에 있는 호차 번호만 중복 없이 뽑아서 필터 칩 목록으로 사용
+    const stops = useMemo(
+        () => data?.stops ?? [],
+        [data],
+    )
+
+    // 서버에서 받은 좌석 데이터에 내가 착석한 좌석 상태만 mine으로 덧씌운 화면용 좌석 목록
+    const displaySeats = useMemo(
+        () =>
+            (data?.seats ?? []).map((seat) => {
+                const isMySeat =
+                    mySeatKey !== null &&
+                    seat.carNo === mySeatKey.carNo &&
+                    seat.seatNo === mySeatKey.seatNo;
+
+                if (!isMySeat) {
+                    return seat
+                }
+
+                return {
+                    ...seat,
+                    // 착석은 일단 로컬 상태로만 처리
+                    // 일부 구간만 판매됐어도 착석 확정 시 전 구간을 mine으로 표시
+                    states: seat.states.map(() => 'mine' as const)
+                }
+            }),
+        [data, mySeatKey]
+    )
+
+    // 응답에 있는 호차 번호만 중복 없이 뽑아서 필터 칩 목록으로 사용
     const carNos = useMemo(
         () =>
-            [...new Set(matrix.seats.map((seat) => seat.carNo))],
-        [matrix.seats]
+            [...new Set(displaySeats.map((seat) => seat.carNo))],
+        [displaySeats]
     )
 
     // selectedCarNo가 null이면 필터링 없이 전체 좌석 사용
     const filteredSeats = useMemo(
         () =>
             selectedCarNo === null
-                ? matrix.seats
-                : matrix.seats.filter(
+                ? displaySeats
+                : displaySeats.filter(
                     (seat) => seat.carNo === selectedCarNo,
                 ),
-        [matrix.seats, selectedCarNo]
+        [displaySeats, selectedCarNo]
     )
 
     const recommendedSeat = useMemo(() => {
         // verdictOf를 reduce 비교마다 반복 호출하지 않도록
         // 좌석마다 판정 결과를 미리 한 번씩만 계산해서 같이 보관
-        const seatsWithVerdict = matrix.seats.map((seat) => ({
+        const seatsWithVerdict = displaySeats.map((seat) => ({
             seat,
-            verdict: verdictOf(seat, matrix.stops)
+            verdict: verdictOf(seat, stops)
         }))
 
         // verdictPriority 숫자가 더 작은 좌석을 계속 살아남기는 방식으로 순회
@@ -130,72 +125,111 @@ export default function SeatMatrixPage() {
                 ? current
                 : best
         }, null)
-    }, [matrix.seats, matrix.stops])
+    }, [displaySeats, stops])
 
     const recommendation = recommendedSeat?.verdict ?? null
 
-    // 내가 착석한 좌석이 있는지 판별
+    // 내가 착석한 좌석
     const mySeat = useMemo<Seat | undefined>(
         () =>
-            matrix.seats.find((seat) =>
-                seat.states.some((state) => state === 'mine')
-            ), [matrix.seats]
+            displaySeats.find((seat) =>
+                mySeatKey !== null &&
+                seat.carNo === mySeatKey.carNo &&
+                seat.seatNo === mySeatKey.seatNo
+            ),
+        [displaySeats, mySeatKey]
     )
 
-    // 선택한 좌석의 모든 구간 상태를 mine으로 변경
+    // 선택한 좌석을 내 자리로 기록 (구간 상태 덧씌우기는 displaySeats에서)
     const handleTakeSeat = () => {
         if (selectedSeat === null) {
             return;
         }
 
-        setMatrix((currentMatrix) => ({
-            ...currentMatrix,
-            seats: currentMatrix.seats.map((seat) => {
-                // 호차 안에서는 seatNo가 유일하지만 호차가 다르면 seatNo가 겹칠 수 있어서
-                // carNo까지 같이 비교해야 정확히 같은 좌석을 찾을 수 있음
-                const isSelectedSeat =
-                    seat.carNo === selectedSeat.carNo &&
-                    seat.seatNo === selectedSeat.seatNo;
-
-                if (!isSelectedSeat) {
-                    return seat;
-                }
-
-                return {
-                    ...seat,
-                    // 실제로는 일부 구간만 판매됐어도 착석 확정 시 전 구간을 mine으로 처리
-                    // 추후 연동 시 재검토 필요
-                    states: seat.states.map(() => 'mine' as const),
-                };
-            }),
-        }));
+        setMySeatKey({
+            carNo: selectedSeat.carNo,
+            seatNo: selectedSeat.seatNo,
+        })
 
         // 착석 처리가 끝나면 상세 시트 닫음
         setSelectedSeat(null);
     };
 
-    // mySeat의 모든 구간 상태를 free로 되돌림
+    // 내 자리 해제
     const handleReleaseSeat = () => {
-        if (!mySeat) {
-            return;
-        }
-
-        setMatrix((currentMatrix) => ({
-            ...currentMatrix,
-            seats: currentMatrix.seats.map((seat) =>
-                seat.carNo === mySeat.carNo &&
-                    seat.seatNo === mySeat.seatNo
-                    ? {
-                        ...seat,
-                        states: seat.states.map(() => 'free'),
-                    }
-                    : seat,
-            ),
-        }));
+        setMySeatKey(null)
 
         // 자리 비움 처리가 끝나면 상세 시트 닫음
         setSelectedSeat(null);
     };
+
+    // 선택한 열차 없이 들어온 경우 여정 검색으로 이동
+    if (!selectedTrain) {
+        return (
+            <Navigate
+                to={ROUTES.JOURNEY_SETUP}
+                replace
+            />
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <main className={styles.page}>
+                <section className={styles.content}>
+                    <LoadingScreen message="좌석을 불러오는 중..." />
+                </section>
+            </main>
+        )
+    }
+
+    // 좌석 조회 실패 화면
+    // 서버가 { code, message } 형태로 실패 이유를 내려주므로 그 message를 그대로 표시
+    if (isError) {
+        // 서버 메시지를 꺼내지 못했을 때 쓸 기본 문구
+        let message = "좌석을 불러오지 못했습니다. 잠시 후 다시 시도해주세요."
+
+        // error는 HTTP 응답 에러(FetchBaseQueryError)와 그 외 에러(SerializedError)의 합집합
+        // status를 가진 쪽만 서버 응답 본문을 들고 있음
+        if ("status" in error) {
+            const errorBody = error.data;
+
+            // error.data는 unknown이라 { message: string } 형태인지 직접 확인해야 함
+            // 형태가 다르면(네트워크 끊김, 예상 못 한 응답) 기본 문구를 그대로 사용
+            if (
+                typeof errorBody === "object" &&
+                errorBody !== null &&
+                "message" in errorBody &&
+                typeof errorBody.message === "string"
+            ) {
+                message = errorBody.message;
+            }
+        }
+
+        return (
+            <main className={styles.page}>
+                <section className={styles.content}>
+                    <Note tone="error">
+                        {message}
+                    </Note>
+                </section>
+            </main>
+        )
+    }
+
+    // 조회는 성공했지만 보여줄 좌석이 없는 경우
+    // 전 구간 매진이거나 빈 응답일 때이며, data 자체가 없는 경우도 displaySeats가 빈 배열이라 함께 걸림
+    if (displaySeats.length === 0) {
+        return (
+            <main className={styles.page}>
+                <section className={styles.content}>
+                    <Note tone="warn">
+                        조회된 좌석이 없습니다.
+                    </Note>
+                </section>
+            </main>
+        )
+    }
 
     return (
         <main className={styles.page}>
@@ -206,7 +240,7 @@ export default function SeatMatrixPage() {
                         <Card
                             tone="mine"
                             label="내 자리"
-                            value={`${mySeat.carNo}호차 ${mySeat.seatNo} · ${matrix.stops[matrix.stops.length - 1]}까지`}
+                            value={`${mySeat.carNo}호차 ${mySeat.seatNo} · ${stops[stops.length - 1]}까지`}
                         />
 
                         <Note>
@@ -230,7 +264,8 @@ export default function SeatMatrixPage() {
                 <SeatMatrix
                     // SeatMatrix는 전체 모델 형태를 기대하므로 seats만 필터링 결과로 바꿔서 전달
                     matrix={{
-                        ...matrix,
+                        trainNo: selectedTrain.trainNo,
+                        stops,
                         seats: filteredSeats,
                     }}
                     onSeatClick={setSelectedSeat}
@@ -248,7 +283,7 @@ export default function SeatMatrixPage() {
 
                 <SeatDetailSheet
                     seat={selectedSeat}
-                    stops={matrix.stops}
+                    stops={stops}
                     onClose={() => setSelectedSeat(null)}
                     onTake={handleTakeSeat}
                     onRelease={handleReleaseSeat}
