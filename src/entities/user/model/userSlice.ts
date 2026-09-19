@@ -1,6 +1,6 @@
 import type { LoginResponse, User } from "./types.ts";
-import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
-import {sessionExpired, tokenReissued} from "../../../shared/api/authEvents.ts";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { sessionExpired, tokenReissued } from "../../../shared/api/authEvents.ts";
 
 // restoring: 앱 시작 직후 reissue 응답을 기다리는 상태
 export type AuthStatus = 'restoring' | 'authenticated' | 'anonymous';
@@ -40,10 +40,12 @@ export const userSlice = createSlice({
     // shared에서 발행한 인증 이벤트에 반응
     extraReducers: (builder) => {
         builder
+            // 로그인 직후는 setCredentials가, 새로고침·토큰 만료 후 재발급은 이 경로가 사용자 정보 채움
             .addCase(tokenReissued, (state, action) => {
+                const { accessToken, email, name } = action.payload;
                 state.status = 'authenticated';
-                state.accessToken = action.payload;
-                // reissue 응답에 email/name이 없어 currentUser는 복원되지 않음 => 추후 백엔드에서 응답으로 내려주도록 해야함
+                state.accessToken = accessToken;
+                state.currentUser = { email, name };
             })
             .addCase(sessionExpired, () => anonymousState);
     },

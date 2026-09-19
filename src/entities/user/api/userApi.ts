@@ -25,7 +25,7 @@ export const userApi = createApi({
             })
         }),
         // 앱 새로고침 및 시작시 세션 복원을 위한 엔드포인트
-        // 쿠키의 refreshToken으로 accessToken 재발급
+        // 쿠키의 refreshToken으로 accessToken과 사용자 정보(email/name) 재발급
         // 한번 찔러보고 실패시 (400/500 응답시) 비로그인으로 처리
         reissue: builder.mutation<TokenReissueResponse, void>({
             query: () => ({
@@ -35,7 +35,7 @@ export const userApi = createApi({
             async onQueryStarted(_arg, {dispatch, queryFulfilled}){
                 try {
                     const {data} = await queryFulfilled;
-                    dispatch(tokenReissued(data.accessToken));
+                    dispatch(tokenReissued(data));
                 } catch {
                     dispatch(sessionExpired());
                 }
