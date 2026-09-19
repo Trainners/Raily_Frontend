@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import type {JourneySearch, Train} from "./types.ts";
 
 // 탑승 이후 상태관리 탑승전/탑승/착석/앉아 있는데 판매 알림 온경우
 export type JourneyStatus = 'IDLE' | 'BOARDED' | 'SEATED' | 'EVICTED';
@@ -12,6 +13,10 @@ interface SeatedInfo {
 }
 
 interface JourneyState {
+    // 탑승 이전: 검색 조건 -> 선택 열차 순으로 채워짐
+    search: JourneySearch | null;
+    selectedTrain: Train | null;
+    // 탑승 이후
     status: JourneyStatus;
     trainNo: string | null;
     seatInfo: SeatedInfo | null;
@@ -19,6 +24,8 @@ interface JourneyState {
 }
 
 const initialState: JourneyState = {
+    search: null,
+    selectedTrain: null,
     status: 'IDLE',
     trainNo: null,
     seatInfo: null,
@@ -29,6 +36,16 @@ export const journeySlice = createSlice({
     name: 'journey',
     initialState,
     reducers: {
+        // 여정 검색 폼 제출
+        // 새 검색이면 이전에 고른 열차는 무효처리
+        setSearch: (state, action: PayloadAction<JourneySearch>) => {
+            state.search = action.payload;
+            state.selectedTrain = null;
+        },
+        // 열차 목록에서 하나 선택
+        selectTrain: (state, action: PayloadAction<Train>) => {
+            state.selectedTrain = action.payload;
+        },
         // 열차 탑승 (입석 시작)
         boardTrain: (state, action: PayloadAction<{ trainNo: string }>) => {
             state.status = 'BOARDED';
@@ -57,9 +74,20 @@ export const journeySlice = createSlice({
 });
 
 export const {
+    setSearch,
+    selectTrain,
     boardTrain,
     takeSeat,
     notifySeatEviction,
     releaseSeat,
     finishJourney,
 } = journeySlice.actions;
+
+// selector 필요한 state 모양만 선언
+type JourneyRootState = { journey: JourneyState };
+
+export const selectJourneySearch = (state: JourneyRootState) => state.journey.search;
+export const selectSelectedTrain = (state: JourneyRootState) => state.journey.selectedTrain;
+export const selectJourneyStatus = (state: JourneyRootState) => state.journey.status;
+// "내 여정" 탭 활성 조건: 열차까지 골라야 여정이 있는 것으로 본다
+export const selectHasJourney = (state: JourneyRootState) => state.journey.selectedTrain !== null;
