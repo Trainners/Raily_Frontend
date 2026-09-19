@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { type Seat, type SeatSearchParams, useGetSeatsQuery, type Verdict, verdictOf, verdictText } from '../../../entities/seat';
 import styles from './SeatMatrixPage.module.css';
-import { Button, Card, Note } from '../../../shared/ui';
+import { Button, Card, LoadingScreen, Note } from '../../../shared/ui';
 import FilterCarChip from '../../../features/filter-car/ui/FilterCarChip';
 import SeatLegend from '../../../widgets/seat-matrix/ui/SeatLegend';
 import { SeatDetailSheet } from '../../../widgets/seat-detail';
@@ -34,7 +34,7 @@ export default function SeatMatrixPage() {
             }
             : undefined;
 
-    const { data } = useGetSeatsQuery(
+    const { data, isLoading } = useGetSeatsQuery(
         seatSearchParams as SeatSearchParams,
         { skip: !seatSearchParams },
     )
@@ -165,6 +165,16 @@ export default function SeatMatrixPage() {
                 to={ROUTES.JOURNEY_SETUP}
                 replace
             />
+        )
+    }
+
+    if (isLoading) {
+        return (
+            <main className={styles.page}>
+                <section className={styles.content}>
+                    <LoadingScreen message="좌석을 불러오는 중..." />
+                </section>
+            </main>
         )
     }
 
