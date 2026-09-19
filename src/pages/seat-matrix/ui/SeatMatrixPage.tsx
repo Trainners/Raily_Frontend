@@ -217,6 +217,20 @@ export default function SeatMatrixPage() {
         )
     }
 
+    // 조회는 성공했지만 보여줄 좌석이 없는 경우
+    // 전 구간 매진이거나 빈 응답일 때이며, data 자체가 없는 경우도 displaySeats가 빈 배열이라 함께 걸림
+    if (displaySeats.length === 0) {
+        return (
+            <main className={styles.page}>
+                <section className={styles.content}>
+                    <Note tone="warn">
+                        조회된 좌석이 없습니다.
+                    </Note>
+                </section>
+            </main>
+        )
+    }
+
     return (
         <main className={styles.page}>
             <section className={styles.content}>
