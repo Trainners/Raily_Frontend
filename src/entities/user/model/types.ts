@@ -22,3 +22,10 @@ export interface SignUpRequest {
     password: string;
     name: string;
 }
+
+// 백엔드 /api/auth/reissue 응답 (백엔드 TokenReissueResponse.java와 1:1로 맞춤)
+export interface TokenReissueResponse {
+    accessToken: string;
+    email: string;
+    name: string;
+}
