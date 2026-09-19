@@ -34,7 +34,12 @@ export default function SeatMatrixPage() {
             }
             : undefined;
 
-    const { data, isLoading } = useGetSeatsQuery(
+    const {
+        data,
+        isLoading,
+        isError,
+        error,
+    } = useGetSeatsQuery(
         seatSearchParams as SeatSearchParams,
         { skip: !seatSearchParams },
     )
@@ -58,7 +63,7 @@ export default function SeatMatrixPage() {
     // 서버에서 받은 좌석 데이터에 내가 착석한 좌석 상태만 mine으로 덧씌운 화면용 좌석 목록
     const displaySeats = useMemo(
         () =>
-           (data?.seats ?? []).map((seat) => {
+            (data?.seats ?? []).map((seat) => {
                 const isMySeat =
                     mySeatKey !== null &&
                     seat.carNo === mySeatKey.carNo &&
@@ -173,6 +178,40 @@ export default function SeatMatrixPage() {
             <main className={styles.page}>
                 <section className={styles.content}>
                     <LoadingScreen message="좌석을 불러오는 중..." />
+                </section>
+            </main>
+        )
+    }
+
+    // 좌석 조회 실패 화면
+    // 서버가 { code, message } 형태로 실패 이유를 내려주므로 그 message를 그대로 표시
+    if (isError) {
+        // 서버 메시지를 꺼내지 못했을 때 쓸 기본 문구
+        let message = "좌석을 불러오지 못했습니다. 잠시 후 다시 시도해주세요."
+
+        // error는 HTTP 응답 에러(FetchBaseQueryError)와 그 외 에러(SerializedError)의 합집합
+        // status를 가진 쪽만 서버 응답 본문을 들고 있음
+        if ("status" in error) {
+            const errorBody = error.data;
+
+            // error.data는 unknown이라 { message: string } 형태인지 직접 확인해야 함
+            // 형태가 다르면(네트워크 끊김, 예상 못 한 응답) 기본 문구를 그대로 사용
+            if (
+                typeof errorBody === "object" &&
+                errorBody !== null &&
+                "message" in errorBody &&
+                typeof errorBody.message === "string"
+            ) {
+                message = errorBody.message;
+            }
+        }
+
+        return (
+            <main className={styles.page}>
+                <section className={styles.content}>
+                    <Note tone="error">
+                        {message}
+                    </Note>
                 </section>
             </main>
         )
