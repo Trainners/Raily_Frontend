@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../app/store/hooks";
 import { selectCurrentUser } from "../../../entities/user";
+import { EnablePushButton } from "../../../features/enable-push";
 import { LogoutButton } from "../../../features/logout";
 import { ROUTES } from "../../../shared/config/routes";
 import styles from "./SettingsPage.module.css"
@@ -21,6 +22,11 @@ export default function SettingsPage() {
             <div className={styles.field}>
                 <span className={styles.label}>이름</span>
                 <p className={styles.value}>{name}</p>
+            </div>
+
+            <div className={styles.field}>
+                <span className={styles.label}>좌석 판매 알림</span>
+                <EnablePushButton />
             </div>
 
             <div className={styles.logoutButton}>
