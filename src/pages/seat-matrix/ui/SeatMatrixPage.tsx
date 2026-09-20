@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { type Seat, type SeatSearchParams, useGetSeatsQuery, type Verdict, verdictOf, verdictText } from '../../../entities/seat';
+import { type Seat, type SeatSearchParams, useGetSeatsQuery, verdictOf, verdictText } from '../../../entities/seat';
 import styles from './SeatMatrixPage.module.css';
 import { Button, Card, LoadingScreen, Note } from '../../../shared/ui';
 import FilterCarChip from '../../../features/filter-car/ui/FilterCarChip';
@@ -11,16 +11,6 @@ import { useAppSelector } from '../../../app/store/hooks';
 import { selectJourneySearch, selectSelectedTrain, toSearchParams } from '../../../entities/journey';
 import { Navigate } from 'react-router-dom';
 import { ROUTES } from '../../../shared/config/routes';
-
-// 좌석의 verdictOf 결과를 기준으로 가장 오래 앉아갈 수 있는 좌석 선택
-// 우선순위는 full > until/from > partial > none
-const verdictPriority: Record<Verdict['kind'], number> = {
-    full: 0,
-    until: 1,
-    from: 1,
-    partial: 2,
-    none: 3,
-}
 
 export default function SeatMatrixPage() {
     const selectedTrain = useAppSelector(selectSelectedTrain);
@@ -101,33 +91,10 @@ export default function SeatMatrixPage() {
         [displaySeats, selectedCarNo]
     )
 
-    const recommendedSeat = useMemo(() => {
-        // verdictOf를 reduce 비교마다 반복 호출하지 않도록
-        // 좌석마다 판정 결과를 미리 한 번씩만 계산해서 같이 보관
-        const seatsWithVerdict = displaySeats.map((seat) => ({
-            seat,
-            verdict: verdictOf(seat, stops)
-        }))
+    // 서버에서 우선순위에 따라 정렬해준 좌석 중 첫 번째 좌석을 추천
+    const recommendedSeat = displaySeats[0]
 
-        // verdictPriority 숫자가 더 작은 좌석을 계속 살아남기는 방식으로 순회
-        return seatsWithVerdict.reduce<{
-            seat: Seat;
-            verdict: Verdict;
-        } | null>((best, current) => {
-            if (!best) {
-                return current
-            }
-
-            const currentPriority = verdictPriority[current.verdict.kind]
-            const bestPriority = verdictPriority[best.verdict.kind]
-
-            return currentPriority < bestPriority
-                ? current
-                : best
-        }, null)
-    }, [displaySeats, stops])
-
-    const recommendation = recommendedSeat?.verdict ?? null
+    const recommendation = recommendedSeat ? verdictOf(recommendedSeat, stops) : null
 
     // 내가 착석한 좌석
     const mySeat = useMemo<Seat | undefined>(
@@ -217,8 +184,9 @@ export default function SeatMatrixPage() {
         )
     }
 
-    // 조회는 성공했지만 보여줄 좌석이 없는 경우
-    // 전 구간 매진이거나 빈 응답일 때이며, data 자체가 없는 경우도 displaySeats가 빈 배열이라 함께 걸림
+    // 조회는 성공했지만 조회 가능한 좌석이 하나도 없는 경우
+    // 모든 좌석이 전 구간 매진이면 백엔드가 해당 좌석을 제외하므로
+    // displaySeats가 빈 배열이 되어 이 분기에 걸림
     if (displaySeats.length === 0) {
         return (
             <main className={styles.page}>
@@ -250,7 +218,7 @@ export default function SeatMatrixPage() {
                 ) : (recommendedSeat && recommendation && (
                     <Card
                         label="추천"
-                        value={`${recommendedSeat.seat.carNo}호차 ${recommendedSeat.seat.seatNo} · ${verdictText(recommendation)}`}
+                        value={`${recommendedSeat.carNo}호차 ${recommendedSeat.seatNo} · ${verdictText(recommendation)}`}
                     />
                 )
                 )}
