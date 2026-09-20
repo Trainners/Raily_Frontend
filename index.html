@@ -1,13 +1,23 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>raily-frontend</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/app/main.tsx"></script>
-  </body>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Raily</title>
+  <meta name="description" content="자유석 빈자리 찾기" />
+
+  <!-- PWA: 설치 가능한 웹앱임을 브라우저에 알림 -->
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#2A5AA3" />
+  <!-- iOS: 홈 화면 추가 시 단독 창으로 열리게 하고, 이름/아이콘을 지정 -->
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Raily" />
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+</head>
+<body>
+<div id="root"></div>
+<script type="module" src="/src/app/main.tsx"></script>
+</body>
 </html>
