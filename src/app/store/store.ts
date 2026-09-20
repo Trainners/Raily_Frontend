@@ -3,6 +3,7 @@ import { userApi, userSlice } from "../../entities/user";
 import { journeySlice } from "../../entities/journey";
 import { trainApi } from "../../entities/train";
 import { seatApi } from "../../entities/seat";
+import { notificationApi } from "../../entities/notification";
 
 export const store = configureStore({
     // 리듀서
@@ -16,6 +17,7 @@ export const store = configureStore({
         [userApi.reducerPath]: userApi.reducer,
         [trainApi.reducerPath]: trainApi.reducer,
         [seatApi.reducerPath]: seatApi.reducer,
+        [notificationApi.reducerPath]: notificationApi.reducer,
     },
 
     //RTK Query 백그라운드 미들웨어 추가
@@ -23,7 +25,8 @@ export const store = configureStore({
         getDefaultMiddleware().concat(
             userApi.middleware,
             trainApi.middleware,
-            seatApi.middleware
+            seatApi.middleware,
+            notificationApi.middleware
         ),
     //운영 환경에서는 Redux DevTool를 통해 store에 접근할 수 없도록 연결을 끊음(보안상 토큰 탈취를 막기 위함)
     devTools: import.meta.env.DEV,
