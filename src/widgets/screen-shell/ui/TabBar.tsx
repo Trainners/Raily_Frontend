@@ -34,9 +34,6 @@ export function TabBar() {
                     <Link
                         key={tab.to}
                         to={tab.to}
-                        // SeatMatrixPage가 #30 전까지 location.state로 열차를 받으므로 함께 넘긴다
-                        // TODO(#30): SeatMatrixPage가 store를 읽게 되면 제거
-                        state={tab.requiresJourney ? selectedTrain : undefined}
                         className={`${styles.tab} ${isActive ? styles.active : ''} ${isDisabled ? styles.disabled : ''}`}
                         aria-current={isActive ? 'page' : undefined}
                         aria-disabled={isDisabled || undefined}
