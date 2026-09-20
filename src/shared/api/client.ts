@@ -5,11 +5,11 @@ import {
     fetchBaseQuery,
     type FetchBaseQueryError
 } from "@reduxjs/toolkit/query";
-import {sessionExpired, tokenReissued} from "./authEvents.ts";
+import { sessionExpired, tokenReissued, type TokenReissuedPayload } from "./authEvents.ts";
 
 // type로 필요한 state모양만 구조적으로 선언하여 사용
 // userSlice에 accessToken이 있다는 모양만 선언
-type StateWithAuth = {user : {accessToken: string | null}};
+type StateWithAuth = { user: { accessToken: string | null } };
 
 const rawBaseQuery = fetchBaseQuery({
     baseUrl: '/api',
@@ -18,7 +18,7 @@ const rawBaseQuery = fetchBaseQuery({
     // 나중에 백엔드를 직접 호출(다른 출처)하게 돼도 쿠키가 빠지지 않도록 명시함.
     credentials: 'include',
 
-    prepareHeaders: (headers, {getState}) => {
+    prepareHeaders: (headers, { getState }) => {
         const token = (getState() as StateWithAuth).user.accessToken;
         if (token) headers.set('Authorization', `Bearer ${token}`);
         return headers;
@@ -37,18 +37,21 @@ const isAuthError = (error?: FetchBaseQueryError) =>
 // reissue 진행중 403응답 도착시 Promise를 공유하게 하여 reissue 반복 방지
 let reissueInFlight: Promise<string | null> | null = null;
 
-function reissueAccessToken(api: BaseQueryApi, extraOptions: object) : Promise<string | null> {
+function reissueAccessToken(api: BaseQueryApi, extraOptions: object): Promise<string | null> {
     if (!reissueInFlight) {
-        reissueInFlight = Promise.resolve(rawBaseQuery({url: '/auth/reissue', method: 'POST'}, api, extraOptions))
+        reissueInFlight = Promise.resolve(rawBaseQuery({ url: '/auth/reissue', method: 'POST' }, api, extraOptions))
             .then((response) => {
-                const token = (response.data as { accessToken?: string} | undefined)?.accessToken;
+                const payload = response.data as TokenReissuedPayload | undefined;
+                const token = payload?.accessToken;
+                // 세션이 살아있는지는 accessToken으로만 판단
+                // email/name까지 필수로 검사하면 백엔드가 그 필드를 빠뜨렸을 때 멀쩡한 세션이 만료 처리됨
                 if (response.error || !token) {
                     // 400(쿠키없음), 500(무효)/ 네트워크 오류 => 세션만료
                     api.dispatch(sessionExpired());
                     return null;
                 }
-                // userSlice의 extraReducer가 accessToken을 갱신
-                api.dispatch(tokenReissued(token));
+                // userSlice의 extraReducer가 accessToken과 사용자 정보를 갱신
+                api.dispatch(tokenReissued(payload));
                 return token;
             })
             .finally(() => {
