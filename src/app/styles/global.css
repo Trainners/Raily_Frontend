@@ -2,7 +2,7 @@
 @import './tokens.css';
 
 body {
-    background-color: var(--bg-page);
+    background-color: var(--bg-muted);
     color: var(--text-primary);
     font-family: var(--font-sans);
     font-size: var(--font-size-base);

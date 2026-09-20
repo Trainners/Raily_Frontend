@@ -50,4 +50,7 @@
                         system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
                         Roboto, "Segoe UI", sans-serif;
   --font-size-base:     16px;
+
+  /* layout */
+  --app-max-width:      480px;
 }
