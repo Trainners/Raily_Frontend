@@ -1,5 +1,5 @@
 .base {
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-weight: 600;
   transition:
     background-color 0.2s ease,
@@ -50,12 +50,12 @@
 
 .sm {
   padding: 8px 12px;
-  font-size: 14px;
+  font-size: var(--font-size-md);
 }
 
 .md {
   padding: 12px 16px;
-  font-size: 16px;
+  font-size: var(--font-size-base);
 }
 
 .fullWidth {

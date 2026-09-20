@@ -44,4 +44,35 @@
   --warn-text:          #A9601A;
   --error-bg:           #F7E6E6;
   --error-text:         #B03434;
+
+  /* typography */
+  --font-sans:          "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+                        system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+                        Roboto, "Segoe UI", sans-serif;
+
+  --font-size-xs:       12px;   /* 매트릭스 헤더 */
+  --font-size-sm:       13px;   /* 보조 라벨, 좌석 셀, 탭 */
+  --font-size-md:       14px;   /* 안내문, 작은 버튼 */
+  --font-size-base:     16px;   /* 본문, 입력, 버튼 */
+  --font-size-lg:       18px;   /* 카드 값 */
+  --font-size-xl:       20px;   /* 시트 제목 */
+  --font-size-2xl:      24px;   /* 페이지 제목 */
+
+  /* radius */
+  --radius-sm:          6px;    /* 좌석 셀, 드롭다운 옵션 */
+  --radius-md:          8px;    /* 버튼, Note */
+  --radius-lg:          10px;   /* 입력 컨트롤, 카드, 열차 행 */
+  --radius-xl:          20px;   /* 바텀시트 */
+  --radius-full:        999px;  /* 칩, 배지 */
+
+  /* spacing — 4px 단위 */
+  --space-1:            4px;
+  --space-2:            8px;
+  --space-3:            12px;
+  --space-4:            16px;
+  --space-5:            20px;
+  --space-6:            24px;
+
+  /* layout */
+  --app-max-width:      480px;
 }
