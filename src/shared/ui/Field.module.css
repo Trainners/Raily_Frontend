@@ -5,7 +5,7 @@
 }
 
 .label {
-  font-size: 14px;
+  font-size: var(--font-size-md);
   font-weight: 600;
   color: var(--text-secondary);
 }
@@ -14,7 +14,7 @@
   width: 100%;
   padding: 10px 12px;
   border: 1px solid var(--border-default);
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   background: var(--bg-surface);
   color: var(--text-primary);
   transition:
@@ -38,6 +38,6 @@
 
 .error {
   margin: 0;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   color: var(--error-text);
 }

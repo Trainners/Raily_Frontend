@@ -1,7 +1,7 @@
 .note {
   padding: 12px 14px;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
 }
 
 .default {
