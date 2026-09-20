@@ -44,4 +44,10 @@
   --warn-text:          #A9601A;
   --error-bg:           #F7E6E6;
   --error-text:         #B03434;
+
+  /* typography */
+  --font-sans:          "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+                        system-ui, "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic",
+                        Roboto, "Segoe UI", sans-serif;
+  --font-size-base:     16px;
 }
