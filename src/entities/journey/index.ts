@@ -5,3 +5,4 @@ export {
     selectJourneySearch, selectSelectedTrain, selectJourneyStatus, selectHasJourney,
 } from './model/journeySlice';
 export { toSearchParams } from './model/toSearchParams';
+export { saveRecentSegment, getRecentSegment, type RecentSegment } from './model/recentSegment';
