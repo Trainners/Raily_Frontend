@@ -17,13 +17,13 @@ export type Seat = {
 
 입력 예시:
 {
-    carNumber: 1,
+    carNumber: '0001',
     seatNumber: '1A',
     availabilityBySegment: [true, false, true]
 }
 */
 export type SeatApiResponse = {
-    carNumber: number;
+    carNumber: string;
     seatNumber: string;
     availabilityBySegment: boolean[];
 }
