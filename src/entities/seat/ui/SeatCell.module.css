@@ -2,6 +2,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 36px;
   padding: 6px 10px;
   border: none;
   border-radius: 6px;
@@ -20,9 +21,12 @@
 .sold {
   background: var(--seat-sold-bg);
   color: var(--seat-sold-text);
+  font-weight: 500;
 }
 
 .mine {
   background: var(--seat-mine-bg);
   color: var(--seat-mine-text);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 2px var(--seat-mine-text);
 }
