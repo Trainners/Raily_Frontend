@@ -10,6 +10,7 @@ import {SignUpPage} from "../pages/signup";
 import { SettingsPage } from "../pages/settings";
 import {RedirectIfAuthenticated, RequireAuth} from "./router";
 import {ServiceWorkerBridge} from "./providers";
+import {NotificationsPage} from "../pages/notification";
 
 export default function App() {
     return (
@@ -29,6 +30,7 @@ export default function App() {
                         <Route path={ROUTES.TRAIN_SELECT} element={<TrainSelectPage />} />
                         <Route path={ROUTES.SEAT_MATRIX} element={<SeatMatrixPage />} />
                         <Route path={ROUTES.SETTINGS} element={<SettingsPage />} />
+                        <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
                     </Route>
                     {/*정의되지 않은 경로 : 여정 검색으로 보내고, 로그인 여부는 RequireAuth가 판단*/}
                     <Route path="*" element={<Navigate to={ROUTES.JOURNEY_SETUP} replace />} />
