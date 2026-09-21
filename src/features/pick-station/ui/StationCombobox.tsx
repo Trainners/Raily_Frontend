@@ -52,6 +52,12 @@ export default function StationCombobox({
         setQuery('')
     }
 
+    const handleBlur = () => {
+        // 입력창에서 포커스 벗어나면 편집 모드 종료 및 검색어 초기화
+        setIsEditing(false)
+        setQuery('')
+    }
+
     return (
         <div className={styles.container}>
             <span className={styles.label}>{label}</span>
@@ -66,6 +72,7 @@ export default function StationCombobox({
                         onChange={(event) =>
                             setQuery(event.target.value)
                         }
+                        onBlur={handleBlur}
                         placeholder={placeholder}
                         type="text"
                     />
