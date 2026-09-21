@@ -3,7 +3,7 @@
     top: 0;
     z-index: 100;
     display: grid;
-    grid-template-columns: 48px 1fr 48px;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     height: 56px;
     padding: 0 8px;
@@ -11,10 +11,17 @@
     border-bottom: 1px solid var(--border-default);
 }
 
-.side {
+.left {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
 }
 
 .title {
@@ -43,4 +50,36 @@
     font-weight: 700;
     background: var(--accent-subtle);
     color: var(--accent-text);
+}
+
+.bell {
+    position: relative;       /* 배지 위치의 기준점 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;              /* 터치 타깃 최소 44px */
+    height: 44px;
+    border-radius: 999px;
+    color: var(--text-primary);
+}
+
+.bell:focus-visible {
+    outline: 2px solid var(--accent-base);
+    outline-offset: 2px;
+}
+
+.badge {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+    background: var(--error-text);
+    color: var(--text-onAccent);
 }
