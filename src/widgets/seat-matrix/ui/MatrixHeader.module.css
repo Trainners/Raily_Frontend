@@ -16,6 +16,10 @@
   align-self: stretch;
   display: flex;
   align-items: center;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  justify-content: center;
 }
 
 .cells {
