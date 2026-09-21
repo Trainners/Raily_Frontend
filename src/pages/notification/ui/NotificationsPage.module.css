@@ -1,0 +1,61 @@
+.page {
+    padding: 0 20px;
+}
+
+.list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border-default);
+    border-radius: 10px;
+    background: var(--bg-surface);
+    text-align: left;
+    cursor: pointer;
+}
+
+.item:focus-visible {
+    outline: 2px solid var(--accent-base);
+    outline-offset: 2px;
+}
+
+/* 안 읽은 알림: 왼쪽에 강조 선 */
+.unread {
+    border-left: 4px solid var(--accent-base);
+}
+
+/* 푸시를 눌러 들어온 그 알림 */
+.highlight {
+    background: var(--accent-subtle);
+    border-color: var(--accent-border);
+}
+
+.title {
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.body {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+.time {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.status {
+    margin: 0;
+    color: var(--text-secondary);
+}
