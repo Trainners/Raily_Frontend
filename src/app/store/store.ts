@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import {setupListeners} from "@reduxjs/toolkit/query";
 import { userApi, userSlice } from "../../entities/user";
 import { journeySlice } from "../../entities/journey";
 import { trainApi } from "../../entities/train";
@@ -32,6 +33,7 @@ export const store = configureStore({
     devTools: import.meta.env.DEV,
 });
 
-//
+setupListeners(store.dispatch);
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
