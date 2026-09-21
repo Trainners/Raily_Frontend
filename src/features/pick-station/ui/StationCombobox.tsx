@@ -52,6 +52,28 @@ export default function StationCombobox({
         setQuery('')
     }
 
+    // 검색 후 엔터로도 선택할 수 있게 함
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key !== 'Enter') {
+            return
+        }
+
+        const firstStop = filteredStops[0]
+
+        // 검색 결과가 없으면 filteredStops[0]이 undefined라 그대로 넘기면 값이 깨짐
+        if (!firstStop) {
+            return
+        }
+
+        handleSelect(firstStop)
+    }
+
+    const handleBlur = () => {
+        // 입력창에서 포커스 벗어나면 편집 모드 종료 및 검색어 초기화
+        setIsEditing(false)
+        setQuery('')
+    }
+
     return (
         <div className={styles.container}>
             <span className={styles.label}>{label}</span>
@@ -66,6 +88,8 @@ export default function StationCombobox({
                         onChange={(event) =>
                             setQuery(event.target.value)
                         }
+                        onKeyDown={handleKeyDown}
+                        onBlur={handleBlur}
                         placeholder={placeholder}
                         type="text"
                     />

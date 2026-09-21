@@ -21,9 +21,8 @@ export default function TimeSelect({
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
-        // 시각을 고르면 바로 부모에 반영하고 보기 모드로 복귀
+        // 오전/오후·시·분을 차례로 고르는 동안 값만 부모에 반영하고 입력창은 열어둔다
         onChange(event.target.value)
-        setIsEditing(false)
     }
 
     return (
@@ -36,7 +35,7 @@ export default function TimeSelect({
                     type="time"
                     value={value}
                     onChange={handleChange}
-                    // 시각을 고르지 않고 다른 곳 클릭해도 보기 모드로 돌아가게 함
+                    // 입력창을 닫는 유일한 경로. 선택을 모두 마치고 바깥을 클릭하면 보기 모드로 돌아간다
                     onBlur={() => setIsEditing(false)}
                     autoFocus
                 />
