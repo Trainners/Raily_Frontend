@@ -1,16 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type {JourneySearch, Train} from "./types.ts";
-
-// 탑승 이후 상태관리 탑승전/탑승/착석/앉아 있는데 판매 알림 온경우
-export type JourneyStatus = 'IDLE' | 'BOARDED' | 'SEATED' | 'EVICTED';
-
-interface SeatedInfo {
-    carNo: number;
-    seatNo: string;
-    fromStation: string;
-    // 다음 예약자가 타기 전까지 앉을 수 있는 역
-    toStation: string;
-}
+import type {JourneySearch, JourneyStatus, SeatedInfo, Train} from "./types.ts";
 
 interface JourneyState {
     // 탑승 이전: 검색 조건 -> 선택 열차 순으로 채워짐
@@ -91,3 +80,7 @@ export const selectSelectedTrain = (state: JourneyRootState) => state.journey.se
 export const selectJourneyStatus = (state: JourneyRootState) => state.journey.status;
 // "내 여정" 탭 활성 조건: 열차까지 골라야 여정이 있는 것으로 본다
 export const selectHasJourney = (state: JourneyRootState) => state.journey.selectedTrain !== null;
+// 착석 정보 / 서버 감시건 id / 판매 감지 문구
+export const selectSeatInfo = (state: JourneyRootState) => state.journey.seatInfo;
+export const selectSeatWatchId = (state: JourneyRootState) => state.journey.seatInfo?.seatWatchId ?? null;
+export const selectAlertMessage = (state: JourneyRootState) => state.journey.alertMessage;

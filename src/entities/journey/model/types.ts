@@ -14,9 +14,14 @@ export type JourneySearch = {
 export type JourneyStatus = 'IDLE' | 'BOARDED' | 'SEATED' | 'EVICTED';
 
 export type SeatedInfo = {
+    // 서버 감시건 id. 폴링·취소에 필요. optional 로 두지 않는다(착석 = 감시 등록)
+    seatWatchId: number;
+    // 어느 열차에서 앉았는지. 다른 열차 화면에서 "내 자리"로 잘못 칠해지는 것을 막는다
+    trainNo: string;
     carNo: number;
-    seatNO: string;
+    seatNo: string;          // 기존 오타 seatNO → seatNo
     fromStation: string;
+    // 다음 예약자가 타기 전까지 앉을 수 있는 역
     toStation: string;
 }
 
