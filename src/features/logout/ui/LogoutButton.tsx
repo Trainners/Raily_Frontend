@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useLogoutMutation } from "../../../entities/user";
+import { useAppDispatch, useAppSelector } from "../../../app/store/hooks";
 import { finishJourney, selectSeatWatchId } from "../../../entities/journey";
 import {
     notificationApi, useCancelSeatWatchMutation, useUnsubscribePushMutation,
@@ -26,8 +26,8 @@ function withTimeout<T>(promise: Promise<T>): Promise<T> {
 }
 
 export default function LogoutButton({ onLoggedOut }: LogoutButtonProps) {
-    const dispatch = useDispatch();
-    const seatWatchId = useSelector(selectSeatWatchId);
+    const dispatch = useAppDispatch();
+    const seatWatchId = useAppSelector(selectSeatWatchId);
     const [logout] = useLogoutMutation();
     const [cancelSeatWatch] = useCancelSeatWatchMutation();
     const [unsubscribePush] = useUnsubscribePushMutation();

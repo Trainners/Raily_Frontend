@@ -35,7 +35,8 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
 export function urlBase64ToUint8Array(base64String: string): Uint8Array<ArrayBuffer> {
     const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
-    const raw = window.atob(base64);
+    // window.atob 이 아니라 전역 atob 을 쓴다. 브라우저에서는 동일하고, node 환경(vitest)에서도 동작해 테스트가 가능하다
+    const raw = atob(base64);
     const bytes = new Uint8Array(raw.length);
     for (let i = 0; i < raw.length; i += 1) {
         bytes[i] = raw.charCodeAt(i);
