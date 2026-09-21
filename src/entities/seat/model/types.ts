@@ -17,43 +17,30 @@ export type Seat = {
 
 입력 예시:
 {
-    h_con_seat_no: '1A',
-    h_sale_psb_flg: 'Y',
+    carNumber: 1,
+    seatNumber: '1A',
+    availabilityBySegment: [true, false, true]
 }
 */
-export type SeatInfoApiResponse = {
-    h_con_seat_no: string;
-    h_sale_psb_flg: 'Y' | 'N';
+export type SeatApiResponse = {
+    carNumber: number;
+    seatNumber: string;
+    availabilityBySegment: boolean[];
 }
 
 /*
-백엔드 호차 하나 응답
+백엔드 전체 좌석 응답
 
 입력 예시:
 {
-    strResult: 'SUCC',
-    seat_infos: {
-        seat_info: [...]
-    }
+    stops: ['천안', '평택', '수원', '영등포'],
+    seats: [...]
 }
 */
-export type CarSeatsApiResponse = {
-    strResult: string;
-    seat_infos: {
-        seat_info: SeatInfoApiResponse[];
-    }
+export type SeatsApiResponse = {
+    stops: string[];
+    seats: SeatApiResponse[];
 }
-
-/*
- 백엔드 전체 좌석 응답
-
-구간 -> 호차 -> 호차 응답
-예: '천안-평택' -> '0001' -> CarSeatsApiResponse
-*/
-export type SeatsApiResponse = Record<
-    string,
-    Record<string, CarSeatsApiResponse>
->
 
 /*
 좌석 조회 요청 파라미터
@@ -67,7 +54,7 @@ export type SeatSearchParams = {
 }
 
 /*
-좌석 조회 API가 반환하는 화면 데이터
+SeatsApiResponse를 변환한 결과로 화면(useGetSeatsQuery)이 받는 데이터
 */
 export type SeatMatrixData = {
     stops: string[];
