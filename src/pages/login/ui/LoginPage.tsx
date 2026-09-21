@@ -1,14 +1,17 @@
-import {Link, useNavigate} from 'react-router-dom';
+import {Link, useLocation, useNavigate} from 'react-router-dom';
 import {BrandMark} from "../../../shared/ui";
 import {ROUTES} from "../../../shared/config/routes.ts";
 import {LoginForm} from "../../../features/login";
+import {resolvePostLoginPath} from "../../../shared/lib/safePath.ts";
 
 export default function LoginPage() {
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLoginSuccess = () => {
-        navigate(ROUTES.JOURNEY_SETUP, {replace: true})
+        // RedirectIfAuthenticated 와 같은 함수로 계산해야 어느 쪽이 먼저 실행돼도 결과가 같다
+        navigate(resolvePostLoginPath(location.state, ROUTES.JOURNEY_SETUP), {replace: true})
     }
 
     return (
