@@ -163,12 +163,6 @@ export default function SeatMatrixPage() {
 
     const recommendation = recommendedSeat ? verdictOf(recommendedSeat, stops) : null
 
-    // 내가 착석한 좌석
-    const mySeat = useMemo<Seat | undefined>(
-        () => displaySeats.find(isMySeat),
-        [displaySeats, isMySeat]
-    )
-
     // 등록/취소 요청 중에는 버튼을 잠근다
     const isSubmitting = isRegistering || isCancelling;
 
@@ -298,16 +292,27 @@ export default function SeatMatrixPage() {
         )
     }
 
+    /*
+    '내 자리' 카드와 자리 비움 버튼은 서버 응답이 아니라 내가 기록해 둔 착석 정보로 그린다.
+    전 구간이 매진된 좌석은 백엔드가 응답에서 제외하기 때문에, 응답에서 찾는 방식으로 두면
+    정작 자리가 팔렸을 때 카드와 판매 경고가 함께 사라진다.
+    매트릭스의 mine 표시는 displaySeats 가 따로 처리하므로 영향이 없다.
+    */
+    const mySeatInfo =
+        seatInfo !== null && seatInfo.trainNo === selectedTrain.trainNo
+            ? seatInfo
+            : null;
+
     return (
         <main className={styles.page}>
             <section className={styles.content}>
                 {/* 내 좌석이 있으면 추천 계산 결과보다 내 자리 카드를 우선적으로 보여줌 */}
-                {mySeat ? (
+                {mySeatInfo ? (
                     <>
                         <Card
                             tone="mine"
                             label="내 자리"
-                            value={`${mySeat.carNo}호차 ${mySeat.seatNo} · ${stops[stops.length - 1]}까지`}
+                            value={`${mySeatInfo.carNo}호차 ${mySeatInfo.seatNo} · ${mySeatInfo.toStation}까지`}
                         />
 
                         {/* 알림은 좌석이 팔리는 순간이 아니라 각 정차역 도착 10분 전부터 서버가 확인해 보낸다.
@@ -354,7 +359,7 @@ export default function SeatMatrixPage() {
 
                 <SeatLegend />
 
-                {mySeat ? (
+                {mySeatInfo ? (
                     <ReleaseSeatButton onRelease={handleReleaseSeat} disabled={isSubmitting} />
                 ) : (
                     <Button fullWidth variant="ghost">
