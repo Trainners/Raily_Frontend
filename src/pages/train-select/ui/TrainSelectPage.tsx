@@ -1,52 +1,38 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import {Navigate, useNavigate} from "react-router-dom";
 import { useGetTrainsQuery } from "../../../entities/train";
 import { Note } from "../../../shared/ui";
 import { TrainList } from "../../../widgets/train-list";
 import { ROUTES } from "../../../shared/config/routes";
-import type { TrainSearchParams } from "../../../entities/train/model/types";
-
-// JourneySetupPage에서 navigate로 넘기는 폼 입력값하고 같은 형태
-type JourneySearchState = {
-    from: string;
-    to: string;
-    date: string;
-    afterTime: string;
-}
+import type { TrainSearchParams } from "../../../entities/train";
+import {useAppDispatch, useAppSelector} from "../../../app/store/hooks.ts";
+import {selectJourneySearch, selectTrain, toSearchParams} from "../../../entities/journey";
 
 export default function TrainSelectPage() {
-    const location = useLocation();
+    // 훅들
+    const search = useAppSelector(selectJourneySearch);
+    const dispatch = useAppDispatch();
     const navigate = useNavigate();
 
-    // JourneySetupPage 안 거치고 바로 들어오면 state 없을 수도 있어서 null 허용
-    const searchState = location.state as JourneySearchState | null;
+    // 훅으로 넘길 값 계산(api 요청 파라미터 형태로 변환)
+    const searchParams: TrainSearchParams | undefined = search
+        ? toSearchParams(search)
+        : undefined
 
-    // state 없을 때는 기존에 하드코딩 했던 기본값으로 대체
-    const afterTime = searchState?.afterTime ?? '07:00';
+    // search가 없으면 skip으로 요청 블로킹
+    const {data:trains = [], isLoading, isError} = useGetTrainsQuery(
+        searchParams as TrainSearchParams,
+        //skip으로 요청만 막음
+        {skip: !search},
+    );
 
-    // 화면에서 사용하는 검색 조건을 API 요청 파라미터 형태로 변환
-    const searchParams: TrainSearchParams | undefined = searchState
-        ? {
-            departureStation: searchState.from,
-            arrivalStation: searchState.to,
-            // 백엔드가 date/time을 yyyyMMdd/HHmmss 숫자 형식으로 받아서
-            // 화면 표시용 문자열에서 숫자만 뽑아 변환
-            date: searchState.date.replace(/[^0-9]/g, ''),
-            time: searchState.afterTime.replace(/[^0-9]/g, '') + '00'
-        }
-        : undefined;
-
-    const {
-        data: trains = [],
-        isLoading,
-        isError,
-    } = useGetTrainsQuery(searchParams as TrainSearchParams, {
-        skip: !searchState
-    })
-
+    // 검색 조건 없이 들어오면 (url입력이나 새로고침 인 경우) 여정 검색으로 강제 라우팅한다.
+    if (!search) {
+        return <Navigate to={ROUTES.JOURNEY_SETUP} replace />;
+    }
     return (
         <main>
             {/* 이후 별도의 검색 조건 요약 바 컴포넌트로 분리 예정 */}
-            <p>{afterTime} 이후 출발 · {trains.length}편</p>
+            <p>{search.afterTime} 이후 출발 · {trains.length}편</p>
 
             {isLoading && <p>열차 정보를 불러오는 중입니다.</p>}
 
@@ -56,10 +42,9 @@ export default function TrainSelectPage() {
                 <TrainList
                     trains={trains}
                     onSelectTrain={(train) => {
-                        // 선택한 열차 정보를 라우터 state로 넘겨서 SeatMatrixPage에서 location.state로 받음
-                        navigate(ROUTES.SEAT_MATRIX, {
-                            state: train
-                        })
+                        // 탭바("내 여정")가 읽을 수 있게 store에 저장
+                        dispatch(selectTrain(train));
+                        navigate(ROUTES.SEAT_MATRIX);
                     }}
                 />
             )}

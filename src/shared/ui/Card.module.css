@@ -1,7 +1,7 @@
 .card {
   padding: 16px;
   border: 1px solid var(--border-default);
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
   background: var(--bg-muted);
 }
 
@@ -10,13 +10,13 @@
   align-items: center;
   gap: 6px;
   margin-bottom: 6px;
-  font-size: 13px;
+  font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--text-secondary);
 }
 
 .value {
-  font-size: 18px;
+  font-size: var(--font-size-lg);
   font-weight: 600;
   color: var(--text-primary);
 }

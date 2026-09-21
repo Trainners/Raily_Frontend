@@ -30,3 +30,6 @@ export type { DateSelectProps } from './DateSelect';
 
 export { default as TimeSelect } from './TimeSelect';
 export type { TimeSelectProps } from './TimeSelect';
+
+export { default as LoadingScreen } from './LoadingScreen';
+export type { LoadingScreenProps } from './LoadingScreen';

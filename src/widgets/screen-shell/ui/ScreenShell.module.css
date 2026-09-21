@@ -1,0 +1,20 @@
+.shell {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;          /* 모바일 주소창 변화에 맞춰 줄어드는 뷰포트 높이 */
+    max-width: var(--app-max-width);
+    margin-inline: auto;         /* 좌우 남는 공간을 똑같이 나눠 가운데 정렬 */
+    background: var(--bg-page);
+}
+
+/* 컨테이너보다 넓은 화면(노트북)에서만 경계선을 그려 앱 영역을 구분한다 */
+@media (min-width: 481px) {
+    .shell {
+        border-inline: 1px solid var(--border-default);
+    }
+}
+
+.main {
+    flex: 1;                     /* 본문이 남는 높이를 채워 탭바가 항상 바닥에 */
+    padding: 16px 0 24px;
+}

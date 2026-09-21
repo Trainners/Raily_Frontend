@@ -11,6 +11,7 @@ export type SeatDetailSheetProps = {
     onClose: () => void;    // 오버레이 클릭 또는 닫기 버튼으로 시트 닫기 요청
     onTake: () => void;     // 선택한 좌석에 앉기 버튼 눌렀을 때 실행하는 콜백
     onRelease: () => void;  // 자리 비움 버튼 눌렀을 때 콜백
+    isSubmitting?: boolean; // 감시 등록/취소 요청 중이면 버튼을 잠가 중복 클릭을 막는다
 }
 
 // SeatCell에서 빈/판매로 표현되는 것과 다르게 풀네임으로 보여줌
@@ -25,7 +26,8 @@ export default function SeatDetailSheet({
     stops,
     onClose,
     onTake,
-    onRelease
+    onRelease,
+    isSubmitting = false
 }: SeatDetailSheetProps) {
     if (seat === null) {
         return null;
@@ -82,9 +84,9 @@ export default function SeatDetailSheet({
 
                 {/* 내 자리 여부에 따라 버튼 다르게 */}
                 {isMySeat ? (
-                    <ReleaseSeatButton onRelease={onRelease} />
+                    <ReleaseSeatButton onRelease={onRelease} disabled={isSubmitting} />
                 ) : (
-                    <TakeSeatButton onTake={onTake} />
+                    <TakeSeatButton onTake={onTake} disabled={isSubmitting} />
                 )}
 
             </div>
