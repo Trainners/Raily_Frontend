@@ -8,5 +8,41 @@
   padding: 24px 16px;
   text-align: center;
   color: var(--text-secondary);
-  font-size: 14px;
+  font-size: var(--font-size-md);
+}
+
+.skeletonRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  background: var(--bg-surface);
+}
+
+.skeletonBar {
+  height: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-muted);
+  animation: skeletonPulse 1.2s ease-in-out infinite;
+}
+
+.skeletonBarShort {
+  width: 40%;
+}
+
+.skeletonBarLong {
+  width: 70%;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeletonBar {
+    animation: none;
+  }
 }
