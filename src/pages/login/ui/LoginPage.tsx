@@ -19,7 +19,7 @@ export default function LoginPage() {
         <div className={styles.page}>
             {/* 상단 서비스 브랜드 마크 */}
             <div className={styles.brand}>
-                <BrandMark/>
+                <BrandMark size={120}/>
                 <p className={styles.tagline}>
                     자유석 빈자리 찾기 서비스
                 </p>

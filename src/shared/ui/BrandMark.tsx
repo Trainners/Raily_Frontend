@@ -2,7 +2,7 @@ export type BrandMarkProps = {
   size?: number;
 };
 
-export default function BrandMark({ size = 120 }: BrandMarkProps) {
+export default function BrandMark({ size = 80 }: BrandMarkProps) {
   return (
     <svg
       width={size}
