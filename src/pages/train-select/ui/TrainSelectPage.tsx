@@ -1,11 +1,12 @@
 import {Navigate, useNavigate} from "react-router-dom";
 import { useGetTrainsQuery } from "../../../entities/train";
 import { Note } from "../../../shared/ui";
-import { TrainList } from "../../../widgets/train-list";
+import { TrainList, TrainListSkeleton } from "../../../widgets/train-list";
 import { ROUTES } from "../../../shared/config/routes";
 import type { TrainSearchParams } from "../../../entities/train";
 import {useAppDispatch, useAppSelector} from "../../../app/store/hooks.ts";
 import {selectJourneySearch, selectTrain, toSearchParams} from "../../../entities/journey";
+import styles from "./TrainSelectPage.module.css";
 
 export default function TrainSelectPage() {
     // 훅들
@@ -29,16 +30,33 @@ export default function TrainSelectPage() {
     if (!search) {
         return <Navigate to={ROUTES.JOURNEY_SETUP} replace />;
     }
+
+    // 응답을 받은 뒤에만 편수를 보여준다 (로딩 중 "0편" 방지)
+    const isReady = !isLoading && !isError;
+
     return (
-        <main>
-            {/* 이후 별도의 검색 조건 요약 바 컴포넌트로 분리 예정 */}
-            <p>{search.afterTime} 이후 출발 · {trains.length}편</p>
+        <div className={styles.page}>
+            {/* 응답이 완료된 경우에만 편수를 표시 */}
+            <p className={styles.summary}>
+                {search.from} → {search.to} · {search.afterTime} 이후 출발
+                {isReady && ` · ${trains.length}편`}
+            </p>
 
-            {isLoading && <p>열차 정보를 불러오는 중입니다.</p>}
+            {/* 로딩 */}
+            {isLoading && <TrainListSkeleton/>}
 
-            {isError && (<p>열차 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</p>)}
+            {/* 에러 */}
+            {isError && (
+                <Note tone="error">열차 정보를 불러오지 못했습니다. 잠시 후 다시 시도해주세요.</Note>
+            )}
 
-            {!isLoading && !isError && (
+            {/* 요청 성공했지만 조건에 맞는 열차가 하나도 없는 경우 */}
+            {isReady && trains.length === 0 && (
+                <Note tone="warn">조건에 맞는 열차가 없습니다. 시각이나 구간을 바꿔 다시 조회해주세요.</Note>
+            )}
+
+            {/* 요청 성공했고 열차가 하나 이상 있는 경우 */}
+            {isReady && trains.length > 0 && (
                 <TrainList
                     trains={trains}
                     onSelectTrain={(train) => {
@@ -52,6 +70,6 @@ export default function TrainSelectPage() {
             <Note>
                 정차역 정보가 없는 열차는 매트릭스를 만들 수 없어 목록에서 제외됩니다.
             </Note>
-        </main>
+        </div>
     )
 }
