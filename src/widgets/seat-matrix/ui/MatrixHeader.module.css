@@ -1,17 +1,27 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
+  width: max-content;
+  min-width: 100%;
 }
 
 .spacer {
-  width: 32px;
+  width: 56px;
   flex-shrink: 0;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  background: var(--bg-page);
+  padding-right: var(--space-4);
+  align-self: stretch;
+  display: flex;
+  align-items: center;
 }
 
 .cells {
   display: grid;
   flex: 1;
+  gap: var(--space-1);
 }
 
 .segments {
