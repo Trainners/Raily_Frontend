@@ -10,7 +10,7 @@ import {SignUpPage} from "../pages/signup";
 import { SettingsPage } from "../pages/settings";
 import {RedirectIfAuthenticated, RequireAuth} from "./router";
 import {ServiceWorkerBridge} from "./providers";
-import {NotificationsPage} from "../pages/notification";
+import {NotificationsPage} from "../pages/notifications";
 
 export default function App() {
     return (
