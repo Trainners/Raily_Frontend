@@ -1,0 +1,30 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 24px 20px 0;
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.tagline {
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+}
+
+.footer {
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.link {
+    font-weight: 600;
+    color: var(--accent-text);
+}
