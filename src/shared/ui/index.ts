@@ -33,3 +33,6 @@ export type { TimeSelectProps } from './TimeSelect';
 
 export { default as LoadingScreen } from './LoadingScreen';
 export type { LoadingScreenProps } from './LoadingScreen';
+
+export { default as BrandMarkLoader } from './BrandMarkLoader';
+export type { BrandMarkLoaderProps } from './BrandMarkLoader';

@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {type SignUpRequest, useSignupMutation} from "../../../entities/user";
 import {Button, Field, Note} from "../../../shared/ui";
+import styles from "./SignupForm.module.css"
 
 type SignupValues = SignUpRequest & {
     passwordConfirm: string;
@@ -111,7 +112,7 @@ export function SignupForm({onSuccess} : SignupFormProps) {
     };
 
     return (
-        <form onSubmit={handleSubmit} noValidate>
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
             <Field
             label="이름"
             value={values.name}

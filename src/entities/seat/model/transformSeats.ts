@@ -7,7 +7,8 @@ export function toSeat(
     seat: SeatApiResponse,
 ): Seat {
     return {
-        carNo: seat.carNumber,
+        // 백엔드의 '0001' 같은 호차 번호를 화면 도메인의 number 타입으로 변환
+        carNo: Number(seat.carNumber),
         seatNo: seat.seatNumber,
         states: seat.availabilityBySegment.map(
             (available) =>

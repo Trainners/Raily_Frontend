@@ -1,0 +1,34 @@
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 8px 20px 0;
+}
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.heading {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.description {
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+}
+
+.footer {
+    font-size: var(--font-size-md);
+    color: var(--text-secondary);
+    text-align: center;
+}
+
+.link {
+    font-weight: 600;
+    color: var(--accent-text);
+}

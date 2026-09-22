@@ -57,6 +57,11 @@
     outline: none;
 }
 
+.input::placeholder {
+    color: var(--text-muted);
+    opacity: 1;
+}
+
 .optionList {
     position: absolute;
     top: calc(100% + 4px);

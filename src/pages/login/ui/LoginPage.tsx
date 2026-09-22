@@ -3,6 +3,7 @@ import {BrandMark} from "../../../shared/ui";
 import {ROUTES} from "../../../shared/config/routes.ts";
 import {LoginForm} from "../../../features/login";
 import {resolvePostLoginPath} from "../../../shared/lib/safePath.ts";
+import styles from "./LoginPage.module.css";
 
 export default function LoginPage() {
 
@@ -15,11 +16,11 @@ export default function LoginPage() {
     }
 
     return (
-        <div>
+        <div className={styles.page}>
             {/* 상단 서비스 브랜드 마크 */}
-            <div>
-                <BrandMark/>
-                <p>
+            <div className={styles.brand}>
+                <BrandMark size={120}/>
+                <p className={styles.tagline}>
                     자유석 빈자리 찾기 서비스
                 </p>
             </div>
@@ -28,9 +29,9 @@ export default function LoginPage() {
             <LoginForm onSuccess={handleLoginSuccess}/>
 
             {/* 하단 네비게이션 링크 */}
-            <div>
+            <div className={styles.footer}>
                 <span>아직 계정이 없으신가요? </span>
-                <Link to={ROUTES.SIGNUP}>
+                <Link className={styles.link} to={ROUTES.SIGNUP}>
                     회원가입
                 </Link>
             </div>

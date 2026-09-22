@@ -25,8 +25,8 @@
   --bg-surface:         #FFFFFF;
   --bg-muted:           #EEF1F4;
   --text-primary:       #2A313B;
-  --text-secondary:     #6B7686;
-  --text-muted:         #9AA4B1;
+  --text-secondary:     #5F6B7A;
+  --text-muted:         #687382;
   --text-onAccent:      #FFFFFF;
   --border-default:     #DCE2E8;
   --border-strong:      #C7CFD8;
@@ -35,13 +35,13 @@
   --seat-free-bg:       #D8E8DE;
   --seat-free-text:     #2F6B4C;
   --seat-sold-bg:       #E6E9ED;
-  --seat-sold-text:     #98A2AF;
+  --seat-sold-text:     #5C6775;
   --seat-mine-bg:       #FBE9CC;
   --seat-mine-text:     #8A5A16;
 
   /* status */
   --warn-bg:            #F7EDDF;
-  --warn-text:          #A9601A;
+  --warn-text:          #965414;
   --error-bg:           #F7E6E6;
   --error-text:         #B03434;
 
