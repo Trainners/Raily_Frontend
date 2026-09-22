@@ -17,7 +17,7 @@ export default function MatrixRow({ seat, onSeatClick }: MatrixRowProps) {
 
                 // 정차역 개수가 고정되지 않아서
                 // repeat 활용해서 인라인 스타일로 열 개수와 너비를 동적으로 지정
-                style={{ gridTemplateColumns: `repeat(${seat.states.length}, 1fr)` }}
+                style={{ gridTemplateColumns: `repeat(${seat.states.length}, minmax(52px, 1fr))` }}
             >
                 {seat.states.map((state, index) => (
                     <SeatCell

@@ -21,7 +21,7 @@ export default function MatrixHeader({ stops }: MatrixHeaderProps) {
 
                 // 정차역 개수가 고정되지 않아서
                 // repeat 활용해서 인라인 스타일로 열 개수와 너비를 동적으로 지정
-                style={{ gridTemplateColumns: `repeat(${segments.length}, 1fr)` }}
+                style={{ gridTemplateColumns: `repeat(${segments.length}, minmax(52px, 1fr))` }}
             >
                 {segments.map(({from, to}) => (
                     <span className={styles.segments} key={`${from}-${to}`}>
