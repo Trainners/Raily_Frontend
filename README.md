@@ -4,9 +4,9 @@
 
 > 배포 URL : [Raily](raily-frontend.vercel.app)
 
-> 시연영상 링크 : [영상](영상링크)
+> 시연영상 링크 : [영상](https://drive.google.com/file/d/10Tjdixs1EL7OBcFM_Qqj4iHr3bFf97Bo/view?usp=drive_link)
 
-> 발표자료 링크 : [발표자료](발표자료)
+> 발표자료 링크 : [발표자료](https://docs.google.com/presentation/d/1Z-ly6_lrUxgqkUGTvSMg0H7yK76H0czj/edit?usp=drive_link&ouid=100792446233000212261&rtpof=true&sd=true)
 
 한국철도공사의 정기권은 지정된 구간을 입석으로 이용하는 상품입니다. 좌석을 배정받지 않기 때문에 승객은 열차에 올라 빈자리를 직접 찾아야 합니다.
 
